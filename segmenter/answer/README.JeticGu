@@ -1,0 +1,9 @@
+Mr Jetic Gu was in charge of implementing the bigram algorithm as well as
+improving the score of our unigram algorithm(unknown word scoring). We are the
+first team beat our improved unigram score(above original baseline)(Date 18
+Sept 2016).
+
+We each implemented our own version of unigram algorithm and contested, in the
+end Jetic's won.
+
+We didn't use git to manage the code.

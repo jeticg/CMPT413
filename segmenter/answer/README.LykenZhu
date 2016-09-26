@@ -1,0 +1,11 @@
+Mr Lyken Zhu was in charge of trying out a few bigram smoothing methods to
+improve our score. We are the first group to beat the original baseline(when
+it was still around 90)(Date 17 Sept 2016).
+
+We each implemented our own version of unigram algorithm and contested, in the
+end Jetic's won.
+
+However Mr Zhu was not well during the past week so we haven't gone through all of
+the methods introduced in class.
+
+We didn't use git to manage the code.
