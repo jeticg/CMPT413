@@ -76,7 +76,7 @@ class BigramSegmenter():
     def Dw(self, prev, word):
         "Conditional probability of word, given previous word."
         try:
-            return float(self.p2Dist[prev + ' ' + word])/self.pDist[prev]
+            return float(self.p2Dist[prev + ' ' + word]) / self.pDist[prev]
         except KeyError:
             return self.pDist(word)
 

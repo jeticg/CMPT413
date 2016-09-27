@@ -40,6 +40,7 @@ class WordProbabilityDist(dict):
         elif len(key) == 0:
             return 1
         else:
+            # when len(key) >= 2, consider how to segment
             # Calling the unknownWordDist to provide a probability score for
             # unknown word. The model description is included in our README file
             score = 1
@@ -85,9 +86,13 @@ class BigramSegmenter():
     def Dw(self, prev, word):
         "Conditional probability of word, given previous word."
         try:
-            return float(self.p2Dist[prev + ' ' + word])/self.pDist[prev]
+            # smoothing
+            # p2Dist => the count of prev+word.
+            # return float(self.p2Dist[prev + ' ' + word]) / (self.pDist[prev])
+            return float(0.1 +  self.p2Dist[prev + ' ' + word]) / (35 +  self.pDist[prev])
+
         except KeyError:
-            return self.pDist(word)
+            return self.pDist(word) # probability
 
     def segment(self, line, prev='<S>', maxLen=5):
         if (line, prev) in self.segmentTable:
@@ -108,9 +113,8 @@ class BigramSegmenter():
             prob = log(self.Dw(prev, word))
             results.append((prob + restProb, [word] + restWords))
 
-        finalAns = results[0]
-
         # Max of results
+        finalAns = results[0]
         for i in range(len(results)):
             if results[i][0] > finalAns[0]:
                 finalAns = results[i]
@@ -168,7 +172,7 @@ def unigram():
 
 def bigram():
     # bigram  algorithm
-    Pw = WordProbabilityDist(opts.counts1w)
+    Pw = WordProbabilityDist(opts.counts1w) # occurance / total
     P2w = WordProbabilityDist(opts.counts2w)
 
     old = sys.stdout
