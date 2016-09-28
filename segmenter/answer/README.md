@@ -54,7 +54,8 @@ And for unknown word pairs:
 
 	score(prev, first) = scoreOfWord(first)
 	
-This algorithm without smoothing gave us a score of 92.463. Because one of our teammate is currently sick so we didn't have time to try out all of the smoothing methods presented in class.
+This algorithm without smoothing gave us a score of 92.463. We then try add-on smoothing on score evlauation, however, improvement only appears on specific parameters and is tiny (from 92.463 to 92.531). Because one of our teammate is currently sick so we didn't have time to try out all of the smoothing methods presented in class.
+
 
 ### Other Approach
 
