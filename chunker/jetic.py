@@ -13,6 +13,7 @@ def retrieve_feature(output, feat_list):
 
     for i in range(1, len(output)-1):
         (index, feats) = perc.feats_for_word(index, feat_list)
+
         if len(feats) == 0:
             raise ValueError("Returned empty feature")
 
@@ -32,8 +33,10 @@ def perc_train(train_data, tagset, iterations=1):
         sentence_count = 0
 
         for (labeled_list, feat_list) in train_data:
+            # Print out information
             sentence_count += 1
             print "iteration", iteration, "sentence", sentence_count, "of", sentence_total
+
             # Retrieve Gold Output
             gold_output = []
             gold_output.append('B_-1')

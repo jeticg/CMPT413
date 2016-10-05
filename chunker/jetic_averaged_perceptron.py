@@ -13,6 +13,7 @@ def retrieve_feature(output, feat_list):
 
     for i in range(1, len(output)-1):
         (index, feats) = perc.feats_for_word(index, feat_list)
+
         if len(feats) == 0:
             raise ValueError("Returned empty feature")
 
@@ -38,8 +39,10 @@ def avg_perc_train(train_data, tagset, iterations=1):
             # sentences we have used during training
             total_sentence_count += 1
 
+            # Print out information
             sentence_count += 1
             print "iteration", iteration, "sentence", sentence_count, "of", sentence_total
+
             # Retrieve Gold Output
             gold_output = []
             gold_output.append('B_-1')
@@ -63,10 +66,18 @@ def avg_perc_train(train_data, tagset, iterations=1):
                 local_vec = retrieve_feature(local_output, feat_list)
                 gold_vec  = retrieve_feature(gold_output, feat_list)
 
+                # This is the original feat_vec, which is exactly the same with
+                # perceptron
                 feat_vec += gold_vec - local_vec
+
+                # This is the key to averaged perceptron, it sums up all the
+                # feat_vec we have used, and returns the averaged value by
+                # dividing that sum with the total_sentence_count(total number
+                # of sentences used during training, including duplicates
+                # during multiple iterations)
                 feat_vec_sum += feat_vec
 
-        # Finalisation
+        # Finalisation, divide feat_vec_sum with total_sentence_count
         feat_vec = feat_vec_sum / total_sentence_count
 
     return feat_vec
