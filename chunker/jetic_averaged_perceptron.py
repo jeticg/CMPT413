@@ -22,8 +22,10 @@ def retrieve_feature(output, feat_list):
     return feat_vec
 
 
-def perc_train(train_data, tagset, iterations=1):
+def avg_perc_train(train_data, tagset, iterations=1):
     feat_vec = FeatureVector()
+    feat_vec_sum = FeatureVector()
+    total_sentence_count = 0
     default_tag = tagset[0]
 
     for iteration in range(iterations):
@@ -32,6 +34,10 @@ def perc_train(train_data, tagset, iterations=1):
         sentence_count = 0
 
         for (labeled_list, feat_list) in train_data:
+            # For averaged perceptron, we need to know exactly how many
+            # sentences we have used during training
+            total_sentence_count += 1
+
             sentence_count += 1
             print "iteration", iteration, "sentence", sentence_count, "of", sentence_total
             # Retrieve Gold Output
@@ -58,6 +64,10 @@ def perc_train(train_data, tagset, iterations=1):
                 gold_vec  = retrieve_feature(gold_output, feat_list)
 
                 feat_vec += gold_vec - local_vec
+                feat_vec_sum += feat_vec
+
+        # Finalisation
+        feat_vec = feat_vec_sum / total_sentence_count
 
     return feat_vec
 
@@ -66,7 +76,7 @@ if __name__ == '__main__':
     optparser.add_option("-t", "--tagsetfile", dest="tagsetfile", default=os.path.join("data", "tagset.txt"), help="tagset that contains all the labels produced in the output, i.e. the y in \phi(x,y)")
     optparser.add_option("-i", "--trainfile", dest="trainfile", default=os.path.join("data", "train.txt.gz"), help="input data, i.e. the x in \phi(x,y)")
     optparser.add_option("-f", "--featfile", dest="featfile", default=os.path.join("data", "train.feats.gz"), help="precomputed features for the input data, i.e. the values of \phi(x,_) without y")
-    optparser.add_option("-e", "--numepochs", dest="numepochs", default=int(20), help="number of epochs of training; in each epoch we iterate over over all the training examples")
+    optparser.add_option("-e", "--numepochs", dest="numepochs", default=int(10), help="number of epochs of training; in each epoch we iterate over over all the training examples")
     optparser.add_option("-m", "--modelfile", dest="modelfile", default=os.path.join("data", "default.model"), help="weights for all features stored on disk")
     (opts, _) = optparser.parse_args()
 
@@ -80,5 +90,5 @@ if __name__ == '__main__':
     print >>sys.stderr, "reading data ..."
     train_data = perc.read_labeled_data(opts.trainfile, opts.featfile)
     print >>sys.stderr, "done."
-    feat_vec = perc_train(train_data, tagset, int(opts.numepochs))
+    feat_vec = avg_perc_train(train_data, tagset, int(opts.numepochs))
     perc.perc_write_to_file(feat_vec, opts.modelfile)

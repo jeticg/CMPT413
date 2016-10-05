@@ -1,9 +1,15 @@
 from collections import defaultdict
+import types
+NumberTypes = (types.IntType,
+               types.LongType,
+               types.FloatType,
+               types.ComplexType)
+
 
 
 class FeatureVector(defaultdict):
     def __init__(self):
-        super(FeatureVector, self).__init__(int)
+        super(FeatureVector, self).__init__(float)
         return
 
     def __add__(self, otherFeatureVector):
@@ -30,6 +36,22 @@ class FeatureVector(defaultdict):
     def __isub__(self, otherFeatureVector):
         for key in otherFeatureVector:
             self[key] -= otherFeatureVector[key]
+        return self
+
+    def __mul__(self, number):
+        if not isinstance(number, NumberTypes):
+            raise ValueError("Multiplication requires number!")
+        result = FeatureVector()
+        for key in self:
+            result[key] = self[key] * float(number)
+        return self
+
+    def __div__(self, number):
+        if not isinstance(number, NumberTypes):
+            raise ValueError("Division requires number!")
+        result = FeatureVector()
+        for key in self:
+            result[key] = self[key] / float(number)
         return self
 
     def __eq__(self, otherFeatureVector):
