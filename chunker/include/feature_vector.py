@@ -1,14 +1,15 @@
 from collections import defaultdict
-from copy import deepcopy
 
 
 class FeatureVector(defaultdict):
     def __init__(self):
-        super(FeatureVector, self).__init__(float)
+        super(FeatureVector, self).__init__(int)
         return
 
     def __add__(self, otherFeatureVector):
-        result = deepcopy(self)
+        result = FeatureVector()
+        for key in self:
+            result[key] += self[key]
         for key in otherFeatureVector:
             result[key] += otherFeatureVector[key]
         return result
@@ -19,7 +20,9 @@ class FeatureVector(defaultdict):
         return self
 
     def __sub__(self, otherFeatureVector):
-        result = deepcopy(self)
+        result = FeatureVector()
+        for key in self:
+            result[key] += self[key]
         for key in otherFeatureVector:
             result[key] -= otherFeatureVector[key]
         return result
@@ -29,7 +32,7 @@ class FeatureVector(defaultdict):
             self[key] -= otherFeatureVector[key]
         return self
 
-    def __eq___(self, otherFeatureVector):
+    def __eq__(self, otherFeatureVector):
         if len(self) != len(otherFeatureVector):
             return False
         for key in otherFeatureVector:
