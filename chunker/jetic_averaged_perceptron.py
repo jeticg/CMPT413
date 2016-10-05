@@ -1,3 +1,4 @@
+import time
 import perc
 import sys
 import optparse
@@ -26,6 +27,7 @@ def retrieve_feature(output, feat_list):
 def avg_perc_train(train_data, tagset, iterations=1):
     feat_vec = FeatureVector()
     feat_vec_sum = FeatureVector()
+    last_change_dict = FeatureVector()
     total_sentence_count = 0
     default_tag = tagset[0]
 
@@ -60,27 +62,60 @@ def avg_perc_train(train_data, tagset, iterations=1):
             local_output.insert(0, 'B_-1')
             local_output.append('B_+1')
 
-            # When Outputs are different, update feature vector
-            if local_output != gold_output:
-                # Extract features from both outputs
-                local_vec = retrieve_feature(local_output, feat_list)
-                gold_vec  = retrieve_feature(gold_output, feat_list)
+            print gold_output
+            print local_output
 
-                # This is the original feat_vec, which is exactly the same with
-                # perceptron
-                feat_vec += gold_vec - local_vec
+            # Extract features from both outputs
+            local_vec = retrieve_feature(local_output, feat_list)
+            gold_vec  = retrieve_feature(gold_output, feat_list)
 
-                # This is the key to averaged perceptron, it sums up all the
-                # feat_vec we have used, and returns the averaged value by
-                # dividing that sum with the total_sentence_count(total number
-                # of sentences used during training, including duplicates
-                # during multiple iterations)
-                feat_vec_sum += feat_vec
+            # Calculate delta
+            delta_vec = gold_vec - local_vec
+
+            # This is the key to averaged perceptron, it sums up all the
+            # feat_vec we have used, and returns the averaged value by
+            # dividing that sum with the total_sentence_count(total number
+            # of sentences used during training, including duplicates
+            # during multiple iterations)
+
+            #    feat_vec += delta_vec
+            #    feat_vec_sum += feat_vec
+
+            # The following is the optimisation for averaged perceptron
+            # which does exactly the same thing as the code in the above two
+            # lines. Instead of updating the feat_vec_sum everytime we train
+            # a new sentence, we do lazy update.
+            if sentence_count != sentence_total:
+                # Not the last sentence of current iteration
+                if not gold_vec == local_vec:
+                    for key in delta_vec:
+                        # Only update the changed values, and store when they
+                        # was last updated
+                        feat_vec_sum[key] += feat_vec[key] * (total_sentence_count - last_change_dict[key])
+                        last_change_dict[key] = total_sentence_count
+
+                    feat_vec += delta_vec
+                    # Because feat_vec is updated here by adding delta_vec, we
+                    # do exactly the same thing to feat_vec_sum, because it is
+                    # in its nature, a sum of feat_vecs
+                    feat_vec_sum += delta_vec
+            else:
+                # Is the last sentence of current iteration, we need to apply
+                # all pending updates to feat_vec_sum
+                for key in last_change_dict.keys() + feat_vec.keys():
+                    # Just to make sure we have indeed updated every key.
+                    feat_vec_sum[key] += feat_vec[key] * (total_sentence_count - last_change_dict[key])
+                    last_change_dict[key] = total_sentence_count
+
+                if not gold_vec == local_vec:
+                    # Last but not least, don't forget the current delta_vec
+                    feat_vec += delta_vec
+                    feat_vec_sum += delta_vec
 
         # Finalisation, divide feat_vec_sum with total_sentence_count
         feat_vec = feat_vec_sum / total_sentence_count
 
-    return feat_vec
+    return feat_vec.export()
 
 if __name__ == '__main__':
     optparser = optparse.OptionParser()
@@ -101,5 +136,8 @@ if __name__ == '__main__':
     print >>sys.stderr, "reading data ..."
     train_data = perc.read_labeled_data(opts.trainfile, opts.featfile)
     print >>sys.stderr, "done."
+    start_time = time.time()
     feat_vec = avg_perc_train(train_data, tagset, int(opts.numepochs))
+    end_time = time.time()
+    print "Total training Time(seconds): %f" % (end_time - start_time,)
     perc.perc_write_to_file(feat_vec, opts.modelfile)

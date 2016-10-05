@@ -1,3 +1,4 @@
+import time
 import perc
 import sys
 import optparse
@@ -54,6 +55,9 @@ def perc_train(train_data, tagset, iterations=1):
             local_output.insert(0, 'B_-1')
             local_output.append('B_+1')
 
+            print gold_output
+            print local_output
+
             # When Outputs are different, update feature vector
             if local_output != gold_output:
                 # Extract features from both outputs
@@ -62,7 +66,7 @@ def perc_train(train_data, tagset, iterations=1):
 
                 feat_vec += gold_vec - local_vec
 
-    return feat_vec
+    return feat_vec.export()
 
 if __name__ == '__main__':
     optparser = optparse.OptionParser()
@@ -83,5 +87,8 @@ if __name__ == '__main__':
     print >>sys.stderr, "reading data ..."
     train_data = perc.read_labeled_data(opts.trainfile, opts.featfile)
     print >>sys.stderr, "done."
+    start_time = time.time()
     feat_vec = perc_train(train_data, tagset, int(opts.numepochs))
+    end_time = time.time()
+    print "Total training Time(seconds): %f" % (end_time - start_time,)
     perc.perc_write_to_file(feat_vec, opts.modelfile)

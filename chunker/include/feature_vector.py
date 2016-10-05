@@ -12,6 +12,12 @@ class FeatureVector(defaultdict):
         super(FeatureVector, self).__init__(float)
         return
 
+    def export(self):
+        result = defaultdict(float)
+        for key in self:
+            result[key] = self[key]
+        return result
+
     def __add__(self, otherFeatureVector):
         result = FeatureVector()
         for key in self:
