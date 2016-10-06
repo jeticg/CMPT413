@@ -66,6 +66,9 @@ def perc_train(train_data, tagset, iterations=1):
 
                 feat_vec += gold_vec - local_vec
 
+        # Dump every iteration
+        feat_vec.dump("models/jetic_Iter_" + str(iteration) + ".model")
+
     return feat_vec.export()
 
 if __name__ == '__main__':
