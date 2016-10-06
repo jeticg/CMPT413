@@ -114,7 +114,7 @@ def avg_perc_train(train_data, tagset, iterations=1):
 
         # Dump every iteration
         tmp = feat_vec_sum / total_sentence_count
-        tmp.dump("models/jetic_avg_Iter_" + str(iteration) + ".model")
+        tmp.dump("models/jetic_avg_Iter_" + str(iteration+1) + ".model")
 
     # Finalisation, divide feat_vec_sum with total_sentence_count
     feat_vec = feat_vec_sum / total_sentence_count

@@ -6,7 +6,6 @@ NumberTypes = (types.IntType,
                types.ComplexType)
 
 
-
 class FeatureVector(defaultdict):
     def __init__(self):
         super(FeatureVector, self).__init__(float)
@@ -14,13 +13,18 @@ class FeatureVector(defaultdict):
 
     def export(self):
         # Convert to defaultdict, for dumping
+        # Somehow, if we don't convert it to defaultdict, the dumped
+        # feature_vector won't work.
         result = defaultdict(float)
         for key in self:
             result[key] = self[key]
         return result
 
     def dump(self, filename):
-        # export to designated file
+        # Export to designated file
+        # This method is exactly the same with perc.py's implementation of
+        # dumping trained vector. It is ugly, but it's the way it must be. I
+        # hate pickles.
         result = self.export()
         import pickle
         output = open(filename, 'wb')
@@ -55,6 +59,7 @@ class FeatureVector(defaultdict):
         return self
 
     def __mul__(self, number):
+        # Scalar Multiplication
         if not isinstance(number, NumberTypes):
             raise ValueError("Multiplication requires number!")
         result = FeatureVector()
@@ -63,6 +68,7 @@ class FeatureVector(defaultdict):
         return self
 
     def __div__(self, number):
+        # Scalar Division
         if not isinstance(number, NumberTypes):
             raise ValueError("Division requires number!")
         result = FeatureVector()
