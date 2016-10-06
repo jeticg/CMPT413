@@ -112,8 +112,8 @@ def avg_perc_train(train_data, tagset, iterations=1):
                     feat_vec += delta_vec
                     feat_vec_sum += delta_vec
 
-        # Finalisation, divide feat_vec_sum with total_sentence_count
-        feat_vec = feat_vec_sum / total_sentence_count
+    # Finalisation, divide feat_vec_sum with total_sentence_count
+    feat_vec = feat_vec_sum / total_sentence_count
 
     return feat_vec.export()
 
