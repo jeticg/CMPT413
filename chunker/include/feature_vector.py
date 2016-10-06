@@ -13,10 +13,20 @@ class FeatureVector(defaultdict):
         return
 
     def export(self):
+        # Convert to defaultdict, for dumping
         result = defaultdict(float)
         for key in self:
             result[key] = self[key]
         return result
+
+    def dump(self, filename):
+        # export to designated file
+        result = self.export()
+        import pickle
+        output = open(filename, 'wb')
+        pickle.dump(result, output)
+        output.close()
+        return
 
     def __add__(self, otherFeatureVector):
         result = FeatureVector()
