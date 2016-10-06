@@ -94,4 +94,4 @@ if __name__ == '__main__':
     feat_vec = perc_train(train_data, tagset, int(opts.numepochs))
     end_time = time.time()
     print "Total training Time(seconds): %f" % (end_time - start_time,)
-    perc.perc_write_to_file(feat_vec, opts.modelfile)
+    # perc.perc_write_to_file(feat_vec, opts.modelfile)
