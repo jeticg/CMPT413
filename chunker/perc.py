@@ -11,7 +11,7 @@ def read_tagset(tagsetfile):
     return tagset
 
 # for each train/test example, read the set of features 
-# used for determining the output label
+# used for determining the output label ?
 def read_labeled_data(labelfile, featfile):
     labeled_data = []
     lab = gzip.open(labelfile, 'r') if labelfile[-3:] == '.gz' \
