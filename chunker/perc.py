@@ -10,7 +10,7 @@ def read_tagset(tagsetfile):
         tagset.append(line)
     return tagset
 
-# for each train/test example, read the set of features 
+# for each train/test example, read the set of features
 # used for determining the output label ?
 def read_labeled_data(labelfile, featfile):
     labeled_data = []
@@ -37,8 +37,8 @@ def read_labeled_data(labelfile, featfile):
             feat_w = feat_w.strip()
             feat_list.append(feat_w)
         if len(labeled_list) == 0:
-        #if lab_w == '': 
-        #    if feat_line != '': 
+        #if lab_w == '':
+        #    if feat_line != '':
             if len(feat_list) != 0:
                 print >>sys.stderr, "files do not align"
                 print >>sys.stderr, lab_w, feat_line
@@ -60,7 +60,7 @@ def feats_for_word(start_index, feat_list):
             end_index = i
             break
         feats.append(feat_value)
-        if endstate is None: 
+        if endstate is None:
             endstate = feat_value[:4] # set endstate to 'U00:'
     return (end_index, feats)
 
@@ -96,7 +96,7 @@ def perc_test(feat_vec, labeled_list, feat_list, tagset, default_tag):
         viterbi[i] = {} # each column contains for each tag: a (value, backpointer) tuple
 
     # We do not tag the first two and last two words
-    # since we added B_-2, B_-1, B_+1 and B_+2 as buffer words 
+    # since we added B_-2, B_-1, B_+1 and B_+2 as buffer words
     viterbi[0]['B_-2'] = (0.0, '')
     viterbi[1]['B_-1'] = (0.0, 'B_-2')
 
@@ -149,11 +149,11 @@ def perc_test(feat_vec, labeled_list, feat_list, tagset, default_tag):
     return output
 
 def conll_format(output, labeled_list):
-    """ 
+    """
     conlleval documentation states that:
     the file should contain lines with items separated
     by delimiter characters (default is space). The final
-    two items should contain the correct tag and the 
+    two items should contain the correct tag and the
     guessed tag in that order. Sentences should be
     separated from each other by empty lines or lines
     with boundary fields (default -X-).
@@ -208,4 +208,3 @@ if __name__ == '__main__':
     print >>sys.stderr, "done."
     feat_vec = perc_read_from_file(opts.modelfile)
     perc_testall(feat_vec, test_data, tagset)
-

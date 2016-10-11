@@ -30,13 +30,17 @@ def avg_perc_train(train_data, tagset, iterations=1):
     last_change_dict = FeatureVector()
     total_sentence_count = 0
     default_tag = tagset[0]
-
+    import random
     for iteration in range(iterations):
         # Number of Sentences
-        sentence_total = len(train_data)
+
+        # stocastic gradient descent
+        batch_train_data = random.sample(train_data, 100)
+
+        sentence_total = len(batch_train_data)
         sentence_count = 0
 
-        for (labeled_list, feat_list) in train_data:
+        for (labeled_list, feat_list) in batch_train_data:
             # For averaged perceptron, we need to know exactly how many
             # sentences we have used during training
             total_sentence_count += 1
@@ -144,4 +148,4 @@ if __name__ == '__main__':
     feat_vec = avg_perc_train(train_data, tagset, int(opts.numepochs))
     end_time = time.time()
     print "Total training Time(seconds): %f" % (end_time - start_time,)
-    # perc.perc_write_to_file(feat_vec, opts.modelfile)
+    perc.perc_write_to_file(feat_vec, opts.modelfile)
