@@ -121,6 +121,7 @@ def perc_test(feat_vec, labeled_list, feat_list, tagset, default_tag):
                     weight += feat_vec[feat, tag]
                     #print >>sys.stderr, "feat:", feat, "tag:", tag, "weight:", feat_vec[feat, tag]
             prev_list = []
+            # for prev_prev_tag in viterbi[i-2]:
             for prev_tag in viterbi[i-1]:
                 #print >>sys.stderr, "word:", word, "feat:", feat, "tag:", tag, "prev_tag:", prev_tag
                 (prev_value, prev_backpointer) = viterbi[i-1][prev_tag]

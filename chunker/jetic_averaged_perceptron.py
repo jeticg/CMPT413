@@ -35,7 +35,7 @@ def avg_perc_train(train_data, tagset, iterations=1):
         # Number of Sentences
 
         # stocastic gradient descent
-        batch_train_data = random.sample(train_data, 100)
+        batch_train_data = random.sample(train_data, 128)
 
         sentence_total = len(batch_train_data)
         sentence_count = 0
