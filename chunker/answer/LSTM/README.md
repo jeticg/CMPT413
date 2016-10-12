@@ -1,6 +1,3 @@
-## Read me
-Code is mainly from https://github.com/harvardnlp/seq2seq-attn, with some modifications by Lyken. If you want to run the code, please follow instruction below.
-
 ## Sequence-to-Sequence Learning with Attentional Neural Networks
 
 [Torch](http://torch.ch) implementation of a standard sequence-to-sequence model with (optional)
