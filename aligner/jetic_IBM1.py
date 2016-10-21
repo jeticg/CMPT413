@@ -95,6 +95,7 @@ optparser.add_option("-f", "--french", dest="french", default="fr", help="suffix
 optparser.add_option("-l", "--logfile", dest="logfile", default=None, help="filename for logging output")
 optparser.add_option("-t", "--threshold", dest="threshold", default=0.5, type="float", help="threshold for alignment (default=0.5)")
 optparser.add_option("-n", "--num_sentences", dest="num_sents", default=sys.maxint, type="int", help="Number of sentences to use for training and alignment")
+optparser.add_option("-v", "--num_tests", dest="num_tests", default=1000, type="int", help="Number of sentences to use for testing")
 optparser.add_option("-i", "--iterations", dest="iter", default=5, type="int", help="Number of iterations to train")
 (opts, _) = optparser.parse_args()
 f_data = "%s.%s" % (os.path.join(opts.datadir, opts.fileprefix), opts.french)
@@ -104,7 +105,8 @@ if opts.logfile:
     logging.basicConfig(filename=opts.logfile, filemode='w', level=logging.INFO)
 
 biText = [[sentence.strip().split() for sentence in pair] for pair in zip(open(f_data), open(e_data))[:opts.num_sents]]
+biText2 = [[sentence.strip().split() for sentence in pair] for pair in zip(open(f_data), open(e_data))[:opts.num_tests]]
 
 aligner = AlignerIBM1()
 aligner.train(biText, opts.iter)
-aligner.decodeToFile(biText, "jetic-alignment.txt")
+aligner.decodeToFile(biText2, "jetic-alignment.txt")
