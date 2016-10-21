@@ -35,18 +35,18 @@ class AlignerIBM1():
         return 1.0 / v
 
     def train(self, biText, iterations=5):
-        print "Starting Training Process"
+        sys.stderr.write("Starting Training Process\n")
 
         self.initWithBiText(biText)
         initialValue = 1.0 / len(self.f_count)
         for key in self.fe_count:
             self.t[key] = initialValue
-        print "Initialisation Complete"
+        sys.stderr.write("Initialisation Complete\n")
 
         for iteration in range(iterations):
             c = defaultdict(float)
             total = defaultdict(float)
-            print "Starting Iteration", iteration
+            sys.stderr.write("Starting Iteration" + str(iteration) + "\n")
 
             for (f, e) in biText:
                 for fWord in f:
@@ -87,6 +87,26 @@ class AlignerIBM1():
         outputFile.close()
         return
 
+    def decodeToStdout(self, biText):
+        for (f, e) in biText:
+            result = []
+
+            for i in range(len(f)):
+                max_t = 0
+                argmax = -1
+                for j in range(len(e)):
+                    t = self.tProbability(f[i], e[j])
+                    if t > max_t:
+                        max_t = t
+                        argmax = j
+                result.append((i, argmax))
+
+            line = ""
+            for (i, j) in result:
+                line += str(i) + "-" + str(j) + " "
+            sys.stdout.write(line + "\n")
+        return
+
 optparser = optparse.OptionParser()
 optparser.add_option("-d", "--datadir", dest="datadir", default="data", help="data directory (default=data)")
 optparser.add_option("-p", "--prefix", dest="fileprefix", default="hansards", help="prefix of parallel data files (default=hansards)")
@@ -109,4 +129,5 @@ biText2 = [[sentence.strip().split() for sentence in pair] for pair in zip(open(
 
 aligner = AlignerIBM1()
 aligner.train(biText, opts.iter)
-aligner.decodeToFile(biText2, "jetic-alignment.txt")
+# aligner.decodeToStdout(biText2)
+aligner.decodeToFile(biText2, "output_jetic_IBM1")
