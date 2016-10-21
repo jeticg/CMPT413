@@ -71,9 +71,9 @@ class AlignerIBM1():
                 max_t = 0
                 argmax = -1
                 for j in range(len(e)):
-                    t_SiDj = self.tProbability(s[i], d[j])
-                    if t_SiDj > max_t:
-                        max_t = t_SiDj
+                    t = self.tProbability(f[i], e[j])
+                    if t > max_t:
+                        max_t = t
                         argmax = j
                 result.append((i, argmax))
 
