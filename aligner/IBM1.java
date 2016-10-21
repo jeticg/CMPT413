@@ -73,8 +73,7 @@ public class IBM1 {
 	}
 
 
-public void initializeCountsWithoutSets(){
-
+	public void initializeCountsWithoutSets(){
 		for (String[] fewa : bitext_fe){
 			String[] F = fewa[0].split(" ");
 			String[] E = fewa[1].split(" ");
@@ -102,107 +101,106 @@ public void initializeCountsWithoutSets(){
 					e_count.put(e, new Integer(e_count.get(e).intValue()+1));
 				else
 					e_count.put(e, new Integer(1));
-
-
-
 		}
 
 	}
-public HashMap<Pair<String, String>, Double> EM_IBM1(){
-	//Pair p = new Pair("a", "b");
-	HashMap<Pair<String, String>, Double> t = new HashMap<Pair<String, String>, Double>();
 
-	double initialValue = new Double(1.0/f_count.size());
+	public HashMap<Pair<String, String>, Double> EM_IBM1(){
+		//Pair p = new Pair("a", "b");
+		HashMap<Pair<String, String>, Double> t = new HashMap<Pair<String, String>, Double>();
 
-	for (Pair<String, String> p: fe_count.keySet()){
-		t.put(p, initialValue);
-	}
-	//System.out.println("check "+ t.get(new Pair("on","one")));
-	Pair<String, String> sdPair = new Pair<String, String>("","");
-	Pair<String, String> newPair1 = new Pair<String, String>("","");
+		double initialValue = new Double(1.0/f_count.size());
 
-	for (int i = 0; i < 5 ; i++){
-		System.out.println("IBM iteration " + i);
-		HashMap<Pair<String, String>, Double> c = new HashMap<Pair<String, String>, Double>();
-		HashMap<String, Double> total = new HashMap<String, Double>();
+		for (Pair<String, String> p: fe_count.keySet()){
+			t.put(p, initialValue);
+		}
+		//System.out.println("check "+ t.get(new Pair("on","one")));
+		Pair<String, String> sdPair = new Pair<String, String>("","");
+		Pair<String, String> newPair1 = new Pair<String, String>("","");
 
-		//System.out.println(bitext.length);
+		for (int i = 0; i < 5 ; i++){
+			System.out.println("IBM iteration " + i);
+			HashMap<Pair<String, String>, Double> c = new HashMap<Pair<String, String>, Double>();
+			HashMap<String, Double> total = new HashMap<String, Double>();
 
-		for (String[] pair : bitext_fe){
-			String[] S = pair[0].split(" ");
-			String[] D = pair[1].split(" ");
+			//System.out.println(bitext.length);
 
-			for (String s_i : S){
-				double Z = 0;
-				for (String d_j : D){
+			for (String[] pair : bitext_fe){
+				String[] S = pair[0].split(" ");
+				String[] D = pair[1].split(" ");
 
-					//System.out.println("t is null"+ s_i + d_j);
-					sdPair.setPair(s_i, d_j);
-					Z += t.get(sdPair).doubleValue();
-				}
-				for (String d_j : D){
-					newPair1.setPair(s_i,d_j);
+				for (String s_i : S){
+					double Z = 0;
+					for (String d_j : D){
 
-					//c[(f,e)] += t(f,e)/Z
-					if (c.containsKey(newPair1))
-						c.put(newPair1, new Double(c.get(newPair1).doubleValue() + t.get(newPair1).doubleValue()/Z));
-					else{
-						//c[(f,e)] = t(f,e)/Z
-						Pair<String, String> newPair = new Pair<String, String>(s_i,d_j);
-						c.put(newPair, new Double(t.get(newPair).doubleValue()/Z));
+						//System.out.println("t is null"+ s_i + d_j);
+						sdPair.setPair(s_i, d_j);
+						Z += t.get(sdPair).doubleValue();
 					}
-					if (total.containsKey(d_j))
-						total.put(d_j, new Double(total.get(d_j).doubleValue() + t.get(newPair1).doubleValue()/Z));
-					else
-						total.put(d_j, new Double( t.get(newPair1).doubleValue()/Z));
+					for (String d_j : D){
+						newPair1.setPair(s_i,d_j);
+
+						//c[(f,e)] += t(f,e)/Z
+						if (c.containsKey(newPair1))
+							c.put(newPair1, new Double(c.get(newPair1).doubleValue() + t.get(newPair1).doubleValue()/Z));
+						else{
+							//c[(f,e)] = t(f,e)/Z
+							Pair<String, String> newPair = new Pair<String, String>(s_i,d_j);
+							c.put(newPair, new Double(t.get(newPair).doubleValue()/Z));
+						}
+						if (total.containsKey(d_j))
+							total.put(d_j, new Double(total.get(d_j).doubleValue() + t.get(newPair1).doubleValue()/Z));
+						else
+							total.put(d_j, new Double( t.get(newPair1).doubleValue()/Z));
+					}
 				}
 			}
+			for (Pair<String, String> sd : fe_count.keySet()){
+				t.put(sd, c.get(sd).doubleValue()/total.get(sd.getRight()).doubleValue());
+			}
 		}
-		for (Pair<String, String> sd : fe_count.keySet()){
-			t.put(sd, c.get(sd).doubleValue()/total.get(sd.getRight()).doubleValue());
-		}
+
+		return t;
 	}
 
-	return t;
-}
-public ArrayList<String> convertFileToArrayList(String fileName){
-	ArrayList<String> list = new ArrayList<String>();
-	BufferedReader reader = null;
-	try{
-		 reader = new BufferedReader(new FileReader(fileName));
-		String line = null;
-		while ((line = reader.readLine()) != null){
-			list.add(line);
-		}
-		reader.close();
-	}catch(IOException ioe){
-		ioe.printStackTrace();
-	}finally{
+	public ArrayList<String> convertFileToArrayList(String fileName){
+		ArrayList<String> list = new ArrayList<String>();
+		BufferedReader reader = null;
 		try{
+			 reader = new BufferedReader(new FileReader(fileName));
+			String line = null;
+			while ((line = reader.readLine()) != null){
+				list.add(line);
+			}
 			reader.close();
 		}catch(IOException ioe){
 			ioe.printStackTrace();
+		}finally{
+			try{
+				reader.close();
+			}catch(IOException ioe){
+				ioe.printStackTrace();
+			}
+
 		}
-
+		return list;
 	}
-	return list;
-}
 
-public double tProbability(String f, String e, HashMap<Pair<String, String>, Double> t_table){
-	Pair<String, String> fe = new Pair<String, String>(f,e);
+	public double tProbability(String f, String e, HashMap<Pair<String, String>, Double> t_table){
+		Pair<String, String> fe = new Pair<String, String>(f,e);
 
-	int V = 163303;
-	/*if (t_ibm1_20k.containsKey(fe))
-	return t_ibm1_20k.get(fe);
-	else*/
-	if (t_table.containsKey(fe))
-		return t_table.get(fe);
-	else
-		return 1.0/V;
-}
+		int V = 163303;
+		/*if (t_ibm1_20k.containsKey(fe))
+		return t_ibm1_20k.get(fe);
+		else*/
+		if (t_table.containsKey(fe))
+			return t_table.get(fe);
+		else
+			return 1.0/V;
+	}
 
-//returns an ArrayList of alignments results of aligning through IBM1 source to target
 	public ArrayList<String> print_alignment_SD_ibm1(String[][] bitext, HashMap<Pair<String, String>, Double> t, String alignmentFile) throws IOException{
+		//returns an ArrayList of alignments results of aligning through IBM1 source to target
 		BufferedWriter alignment = new BufferedWriter(new FileWriter(alignmentFile));
 		ArrayList<String> alignmentList = new ArrayList<String>();
 		for (String[] pair : bitext){
@@ -236,6 +234,7 @@ public double tProbability(String f, String e, HashMap<Pair<String, String>, Dou
 		alignment.close();
 		return alignmentList;
 	}
+
 	public void gradeAlign(int alignementTestSize, String[][] bitext, ArrayList<String> reference, ArrayList<String> systemAlignment){
 		int size_a = 0;
 		int size_s = 0;
