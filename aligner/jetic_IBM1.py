@@ -63,7 +63,7 @@ class AlignerIBM1():
         return
 
     def decodeToFile(self, biText, fileName):
-        f.open(fileName, "w")
+        outputFile = open(fileName, "w")
         result = []
 
         for (f, e) in biText:
@@ -81,9 +81,9 @@ class AlignerIBM1():
             for (i, j) in result:
                 line += str(i) + "-" + str(j) + " "
 
-            f.write(line + "\n")
+            outputFile.write(line + "\n")
 
-        f.close()
+        outputFile.close()
         return
 
 optparser = optparse.OptionParser()
