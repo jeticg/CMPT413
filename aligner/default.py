@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-import optparse, sys, os, logging
+import optparse
+import sys
+import os
+import logging
 from collections import defaultdict
 
 optparser = optparse.OptionParser()
@@ -23,25 +26,25 @@ f_count = defaultdict(int)
 e_count = defaultdict(int)
 fe_count = defaultdict(int)
 for (n, (f, e)) in enumerate(bitext):
-  for f_i in set(f):
-    f_count[f_i] += 1
+    for f_i in set(f):
+        f_count[f_i] += 1
+        for e_j in set(e):
+            fe_count[(f_i, e_j)] += 1
     for e_j in set(e):
-      fe_count[(f_i,e_j)] += 1
-  for e_j in set(e):
-    e_count[e_j] += 1
-  if n % 500 == 0:
-    sys.stderr.write(".")
+        e_count[e_j] += 1
+    if n % 500 == 0:
+        sys.stderr.write(".")
 
 dice = defaultdict(int)
 for (k, (f_i, e_j)) in enumerate(fe_count.keys()):
-  dice[(f_i,e_j)] = 2.0 * fe_count[(f_i, e_j)] / (f_count[f_i] + e_count[e_j])
-  if k % 5000 == 0:
-    sys.stderr.write(".")
+    dice[(f_i, e_j)] = 2.0 * fe_count[(f_i, e_j)] / (f_count[f_i] + e_count[e_j])
+    if k % 5000 == 0:
+        sys.stderr.write(".")
 sys.stderr.write("\n")
 
 for (f, e) in bitext:
-  for (i, f_i) in enumerate(f): 
-    for (j, e_j) in enumerate(e):
-      if dice[(f_i,e_j)] >= opts.threshold:
-        sys.stdout.write("%i-%i " % (i,j))
-  sys.stdout.write("\n")
+    for (i, f_i) in enumerate(f):
+        for (j, e_j) in enumerate(e):
+            if dice[(f_i, e_j)] >= opts.threshold:
+                sys.stdout.write("%i-%i " % (i, j))
+    sys.stdout.write("\n")
