@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-import optparse, sys, os
+import optparse
+import sys
+import os
 
 optparser = optparse.OptionParser()
 optparser.add_option("-d", "--datadir", dest="datadir", default="data", help="data directory (default=data)")
@@ -21,46 +23,46 @@ if opts.logfile:
 
 inp = sys.stdin if opts.inputfile is None else file(opts.inputfile)
 
-(size_a, size_s, size_a_and_s, size_a_and_p) = (0.0,0.0,0.0,0.0)
+(size_a, size_s, size_a_and_s, size_a_and_p) = (0.0, 0.0, 0.0, 0.0)
 for (i, (f, e, g, a)) in enumerate(zip(open(f_data), open(e_data), open(a_data), inp)):
-  fwords = f.strip().split()
-  ewords = e.strip().split()
-  sure = set([tuple(map(int, x.split("-"))) for x in filter(lambda x: x.find("-") > -1, g.strip().split())])
-  possible = set([tuple(map(int, x.split("?"))) for x in filter(lambda x: x.find("?") > -1, g.strip().split())])
-  alignment = set([tuple(map(int, x.split("-"))) for x in a.strip().split()])
-  size_a += len(alignment)
-  size_s += len(sure)
-  size_a_and_s += len(alignment & sure)
-  size_a_and_p += len(alignment & possible) + len(alignment & sure)
-  if (i<opts.n):
-    sys.stdout.write("  Alignment %i  KEY: ( ) = guessed, * = sure, ? = possible\n" % i)
-    sys.stdout.write("  ")
-    for j in ewords:
-      sys.stdout.write("---")
-    sys.stdout.write("\n")
-    for (i, f_i) in enumerate(fwords):
-      sys.stdout.write(" |")
-      for (j, _) in enumerate(ewords):
-        (left,right) = ("(",")") if (i,j) in alignment else (" "," ")
-        point = "*" if (i,j) in sure else "?" if (i,j) in possible else " "
-        sys.stdout.write("%s%s%s" % (left,point,right))
-      sys.stdout.write(" | %s\n" % f_i)
-    sys.stdout.write("  ")
-    for j in ewords:
-      sys.stdout.write("---")
-    sys.stdout.write("\n")
-    for k in range(max(map(len, ewords))):
-      sys.stdout.write("  ")
-      for word in ewords:
-        letter = word[k] if len(word) > k else " "
-        sys.stdout.write(" %s " % letter)
-      sys.stdout.write("\n")
-    sys.stdout.write("\n")
+    fwords = f.strip().split()
+    ewords = e.strip().split()
+    sure = set([tuple(map(int, x.split("-"))) for x in filter(lambda x: x.find("-") > -1, g.strip().split())])
+    possible = set([tuple(map(int, x.split("?"))) for x in filter(lambda x: x.find("?") > -1, g.strip().split())])
+    alignment = set([tuple(map(int, x.split("-"))) for x in a.strip().split()])
+    size_a += len(alignment)
+    size_s += len(sure)
+    size_a_and_s += len(alignment & sure)
+    size_a_and_p += len(alignment & possible) + len(alignment & sure)
+    if (i < opts.n):
+        sys.stdout.write("    Alignment %i    KEY: ( ) = guessed, * = sure, ? = possible\n" % i)
+        sys.stdout.write("    ")
+        for j in ewords:
+            sys.stdout.write("---")
+        sys.stdout.write("\n")
+        for (i, f_i) in enumerate(fwords):
+            sys.stdout.write(" |")
+            for (j, _) in enumerate(ewords):
+                (left, right) = ("(", ")") if (i, j) in alignment else (" ", " ")
+                point = "*" if (i, j) in sure else "?" if (i, j) in possible else " "
+                sys.stdout.write("%s%s%s" % (left, point, right))
+            sys.stdout.write(" | %s\n" % f_i)
+        sys.stdout.write("    ")
+        for j in ewords:
+            sys.stdout.write("---")
+        sys.stdout.write("\n")
+        for k in range(max(map(len, ewords))):
+            sys.stdout.write("    ")
+            for word in ewords:
+                letter = word[k] if len(word) > k else " "
+                sys.stdout.write(" %s " % letter)
+            sys.stdout.write("\n")
+        sys.stdout.write("\n")
 
 precision = size_a_and_p / size_a
 recall = size_a_and_s / size_s
 aer = 1 - ((size_a_and_s + size_a_and_p) / (size_a + size_s))
 sys.stdout.write("Precision = %f\nRecall = %f\nAER = %f\n" % (precision, recall, aer))
 
-for _ in inp: # avoid pipe error
-  pass
+for _ in inp:  # avoid pipe error
+    pass
