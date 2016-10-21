@@ -27,15 +27,15 @@ public class IBM1 {
 		this.bitext_fe = bitext_fe;
 	}
 
-	/**
-	 * Reading a parallel corpus
-	 * @param fileName
-	 * @param fileName2
-	 * @param linesToRead : number of lines to read from the parallel corpus (for the purpose of debugging)
-	 * @return
-	 * @throws IOException
-	 */
 	public static String[][] readBitext(String fileName, String fileName2, int linesToRead) throws IOException{
+		/**
+		 * Reading a parallel corpus
+		 * @param fileName
+		 * @param fileName2
+		 * @param linesToRead : number of lines to read from the parallel corpus (for the purpose of debugging)
+		 * @return text: two dimensional array. text[sentenceNumber][fr=0;en=1] = lineOfSentence
+		 * @throws IOException
+		 */
 		BufferedReader br = null;
 		BufferedReader br2 = null;
 
@@ -43,11 +43,9 @@ public class IBM1 {
 
 	    try {
 	    	File fileDir = new File(fileName);
-
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(fileDir), "UTF8"));
 
 			File fileDir2 = new File(fileName2);
-
 			br2 = new BufferedReader(new InputStreamReader(new FileInputStream(fileDir2), "UTF8"));
 
 	        String line = br.readLine();
@@ -155,7 +153,7 @@ public class IBM1 {
 				}
 			}
 			for (Pair<String, String> sd : fe_count.keySet()){
-				t.put(sd, c.get(sd).doubleValue()/total.get(sd.getRight()).doubleValue());
+				t.put(sd, c.get(sd).doubleValue() / total.get(sd.getRight()).doubleValue());
 			}
 		}
 
