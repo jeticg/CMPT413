@@ -64,9 +64,10 @@ class AlignerIBM1():
 
     def decodeToFile(self, biText, fileName):
         outputFile = open(fileName, "w")
-        result = []
 
         for (f, e) in biText:
+            result = []
+
             for i in range(len(f)):
                 max_t = 0
                 argmax = -1
