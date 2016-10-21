@@ -46,7 +46,7 @@ class AlignerIBM1():
         for iteration in range(iterations):
             c = defaultdict(float)
             total = defaultdict(float)
-            sys.stderr.write("Starting Iteration" + str(iteration) + "\n")
+            sys.stderr.write("Starting Iteration " + str(iteration) + "\n")
 
             for (f, e) in biText:
                 for fWord in f:
