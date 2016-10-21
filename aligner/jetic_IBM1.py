@@ -28,7 +28,7 @@ class AlignerIBM1():
             self.e_count[e_j] += 1
         return
 
-    def tProbability(f, e):
+    def tProbability(self, f, e):
         v = 163303
         if (f, e) in self.t:
             return self.t[(f, e)]
@@ -71,7 +71,7 @@ class AlignerIBM1():
                 max_t = 0
                 argmax = -1
                 for j in range(len(e)):
-                    t = self.tProbability((f[i], e[j]))
+                    t = self.tProbability(f[i], e[j])
                     if t > max_t:
                         max_t = t
                         argmax = j
