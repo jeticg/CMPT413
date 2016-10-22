@@ -273,7 +273,7 @@ class AlignerHMM():
             i = i - 1
         return trace
 
-    def findBestAlignmentsForAll_AER(self, biText, num_lines, fileName):
+    def findBestAlignmentsForAll_AER(self, biText, fileName):
         outputFile = open(fileName, "w")
         alignmentList = []
         for (f, e) in biText:
@@ -286,11 +286,6 @@ class AlignerHMM():
             alignmentList.append(line)
             outputFile.write(line + "\n")
             # sys.stdout.write(line + "\n")
-
-            if (n == num_lines - 1):
-                outputFile.close()
-                return alignmentList
-            n += 1
         outputFile.close()
         return alignmentList
 
@@ -314,7 +309,10 @@ if opts.logfile:
 biText = [[sentence.strip().split() for sentence in pair] for pair in zip(open(f_data), open(e_data))[:opts.num_sents]]
 biText2 = [[sentence.strip().split() for sentence in pair] for pair in zip(open(f_data), open(e_data))[:opts.num_tests]]
 
-aligner = AlignerIBM1()
-aligner.train(biText, opts.iter)
-# aligner.decodeToStdout(biText2)
-aligner.decodeToFile(biText2, "output_jetic_IBM1")
+alignerIBM1 = AlignerIBM1()
+alignerIBM1.train(biText, opts.iter)
+alignerHMM = AlignerHMM()
+alignerHMM.initWithIBM(alignerIBM1, biText)
+alignerHMM.baumWelch()
+alignerHMM.multiplyOneMinusP0H()
+alignerHMM.findBestAlignmentsForAll_AER(biText2, "output_jetic_HMM")
