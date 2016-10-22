@@ -24,42 +24,49 @@ class AlignerHMM():
         self.biText = biText
         return
 
-    def forwardWithTScaled(self, a, pi, y, N, T, d):
-        c_scaled = [0.0] * T
-        alphaHat = [[0.0] * T] * N
-        totalAlphaDoubleDot = 0
+    def initialiseModel(self, Len):
+        doubleLen = 2 * Len
+        # a: transition parameter
+        # pi: initial parameter
+        self.a = [[[1.0 / Len] * (Len + 1)] * (doubleLen + 1)] * (doubleLen + 1)
+        self.pi = [1.0 / doubleLen] * (doubleLen + 1)
+        return
 
-        for i in range(N + 1):
-            alphaHat[i][1] = pi[i] * self.t[(y[0], d[i - 1])]
-            totalAlphaDoubleDot += alphaHat[i][1]
+    def forwardWithTScaled(self, f, e):
+        alphaScale = [0.0] * (len(f) + 1)
+        alpha = [[0.0] * (len(f) + 1)] * (len(e) + 1)
+        alphaSum = 0
 
-        c_scaled[1] = 1.0 / totalAlphaDoubleDot
+        for i in range(1, len(e) + 1):
+            alpha[i][1] = self.pi[i] * self.t[(f[0], e[i - 1])]
+            alphaSum += alpha[i][1]
 
-        for i in range(1, N + 1):
-            alphaHat[i][1] = c_scaled[1] * alphaHat[i][1]
+        alphaScale[1] = 1.0 / alphaSum
+        for i in range(1, len(e) + 1):
+            alpha[i][1] *= alphaScale[1]
 
-        for t in range(1, T):
-            totalAlphaDoubleDot = 0
-            for j in range(1, N + 1):
+        for t in range(2, len(f) + 1):
+            alphaSum = 0
+            for j in range(1, len(e) + 1):
                 total = 0
-                for i in range(N + 1):
-                    total += alphaHat[i][t] * a[i][j][N]
-                alphaHat[j][t + 1] = self.t[(y[t], d[j - 1])] * total
-                totalAlphaDoubleDot += alphaHat[j][t + 1]
+                for i in range(len(e) + 1):
+                    total += alpha[i][t - 1] * self.a[i][j][len(e)]
+                alpha[j][t] = self.t[(f[t - 1], e[j - 1])] * total
+                alphaSum += alpha[j][t]
 
-            c_scaled[t + 1] = 1.0 / totalAlphaDoubleDot
-            for i in range(1, N + 1):
-                alphaHat[i][t + 1] = c_scaled[t + 1] * alphaHat[i][t + 1]
+            alphaScale[t + 1] = 1.0 / alphaSum
+            for i in range(1, len(e) + 1):
+                alpha[i][t + 1] = alphaScale[t + 1] * alpha[i][t + 1]
 
-        return (alphaHat, c_scaled)
+        return (alpha, alphaScale)
 
-    def backwardWithTScaled(self, a, pi, y, N, T, d, c_scaled):
+    def backwardWithTScaled(self, f, e, c_scaled):
         betaHat = copy.deepcopy(c_scaled)
-        for t in range(T - 1, 0, -1):
-            for i in range(1, N + 1):
+        for t in range(len(f) - 1, 0, -1):
+            for i in range(1, len(e) + 1):
                 total = 0
-                for j in range(1, N + 1):
-                    total += betaHat[j][t + 1] * a[i][j][N] * self.t[(y[t], d[j - 1])]
+                for j in range(1, len(e) + 1):
+                    total += betaHat[j][t + 1] * self.a[i][j][len(e)] * self.t[(f[t], e[j - 1])]
                 betaHat[i][t] = c_scaled[t] * total
         return betaHat
 
@@ -82,12 +89,6 @@ class AlignerHMM():
             biword[i] = key
             i += 1
         return (index, biword)
-
-    def initialiseModel(self, int N):
-        twoN = 2 * N
-        self.a = [[[1.0 / N] * (N + 1)] * (twoN + 1)] * (twoN + 1)
-        self.pi = [1.0 / twoN] * (twoN + 1)
-        return
 
     def baumWelch(self, biText=self.biText, iterations=5):
         N, self.targetLengthSet = self.maxTargetSentenceLength(biText)
@@ -113,47 +114,41 @@ class AlignerHMM():
             start0_time = time.time()
 
             for (f, e) in biText:
-                y = f
-                x = e
-
-                T = len(y)
-                N = len(x)
                 c = defaultdict(float)
 
                 if iteration == 0:
                     self.initialiseModel(N)
 
-                alpha_hat, c_scaled = self.forwardWithTScaled(self.a, self.pi, y, N, T, x)
+                alpha_hat, c_scaled = self.forwardWithTScaled(f, e)
+                beta_hat = self.backwardWithTScaled(f, e, c_scaled)
 
-                beta_hat = self.backwardWithTScaled(self.a, self.pi, y, N, T, x, c_scaled)
-
-                gamma = [[0.0] * (T + 1)] * (N + 1)
+                gamma = [[0.0] * (len(f) + 1)] * (len(e) + 1)
 
                 # Setting gamma
-                for t in range(1, T):
+                for t in range(1, len(f)):
                     logLikelihood += -1 * log(c_scaled[t])
-                    for i in range(1, N + 1):
+                    for i in range(1, len(e) + 1):
                         gamma[i][t] = (alpha_hat[i][t] * beta_hat[i][t]) / c_scaled[t]
-                        totalGammaDeltaOverAllObservations_t_i[indexMap[(y[t - 1], x[i - 1])]] += gamma[i][t]
+                        totalGammaDeltaOverAllObservations_t_i[indexMap[(f[t - 1], e[i - 1])]] += gamma[i][t]
 
-                t = T
+                t = len(f)
                 logLikelihood += -1 * log(c_scaled[t])
-                for i in range(1, N + 1):
+                for i in range(1, len(e) + 1):
                     gamma[i][t] = (alpha_hat[i][t] * beta_hat[i][t]) / c_scaled[t]
-                    totalGammaDeltaOverAllObservations_t_i[indexMap[(y[t - 1], x[i - 1])]] += gamma[i][t]
+                    totalGammaDeltaOverAllObservations_t_i[indexMap[(f[t - 1], e[i - 1])]] += gamma[i][t]
 
-                for t in range(1, T):
-                    for i in range(1, N + 1):
-                        for j in range(1, N + 1):
-                            c[j - i] += = alpha_hat[i][t] * a[i][j][N] * self.t[(y[t], x[j - 1])] * beta_hat[j][t + 1]
+                for t in range(1, len(f)):
+                    for i in range(1, len(e) + 1):
+                        for j in range(1, len(e) + 1):
+                            c[j - i] += alpha_hat[i][t] * self.a[i][j][len(e)] * self.t[(f[t], e[j - 1])] * beta_hat[j][t + 1]
 
-                for i in range(1, N + 1):
-                    for j in range(1, N + 1):
-                        totalC_j_Minus_iOverAllObservations[i][j][N] += c[j - i]
-                    for l in range(1, N + 1):
-                        totalC_l_Minus_iOverAllObservations[i][N] += c[l - i]
+                for i in range(1, len(e) + 1):
+                    for j in range(1, len(e) + 1):
+                        totalC_j_Minus_iOverAllObservations[i][j][len(e)] += c[j - i]
+                    for l in range(1, len(e) + 1):
+                        totalC_l_Minus_iOverAllObservations[i][len(e)] += c[l - i]
 
-                for i in range(1, N + 1):
+                for i in range(1, len(e) + 1):
                     totalGamma1OverAllObservations[i] += gamma[i][1]
             # end of loop over bitext
 
@@ -184,10 +179,10 @@ class AlignerHMM():
             for I in self.targetLengthSet:
                 for i in range(1, I + 1):
                     for j in range(1, I + 1):
-                        a[i][j][I] = totalC_j_Minus_iOverAllObservations[i][j][I] / totalC_l_Minus_iOverAllObservations[i][I]
+                        self.a[i][j][I] = totalC_j_Minus_iOverAllObservations[i][j][I] / totalC_l_Minus_iOverAllObservations[i][I]
 
             for i in range(1, N + 1):
-                pi[i] = totalGamma1OverAllObservations[i] * (1.0 / L)
+                self.pi[i] = totalGamma1OverAllObservations[i] * (1.0 / L)
 
             for k in range(sd_size):
                 f, e = biword[k]
@@ -203,13 +198,13 @@ class AlignerHMM():
         for I in self.targetLengthSet:
             for i in range(1, I + 1):
                 for j in range(1, I + 1):
-                    a[i][j][I] *= 1 - self.p0H
+                    self.a[i][j][I] *= 1 - self.p0H
         for I in self.targetLengthSet:
             for i in range(1, I + 1):
                 for j in range(1, I + 1):
-                    a[i][i + I][I] = self.p0H
-                    a[i + I][i + I][I] = self.p0H
-                    a[i + I][j][I] = a[i][j][I]
+                    self.a[i][i + I][I] = self.p0H
+                    self.a[i + I][i + I][I] = self.p0H
+                    self.a[i + I][j][I] = self.a[i][j][I]
         return
 
     def tProbability(self, f, e):
@@ -221,35 +216,44 @@ class AlignerHMM():
         return 1.0 / v
 
     def aProbability(self, iPrime, i, I):
-        if I in targetLengthSet:
-            return a[iPrime][i][I]
+        # p(i|i',I) is smoothed to uniform distribution for now --> p(i|i',I) = 1/I
+        # we can make it interpolation form like what Och and Ney did
+        if I in self.targetLengthSet:
+            return self.a[iPrime][i][I]
         return 1.0 / I
 
-    def logViterbi(self, N, o, d):
+    def logViterbi(self, f, e):
+        '''
+        This function returns alignment of given sentence in two languages
+        param f: source sentence
+        param e: target sentence
+        return: list of alignment
+        '''
+        N = len(e)
         twoN = 2 * N
-        V = [[0.0] * len(o)] * [twoN + 1]
-        ptr = [[0] * len(o)] * [twoN + 1]
-        newd = d + ["null"] * (len(d))
-        twoLend = 2 * len(d)
+        V = [[0.0] * len(f)] * [twoN + 1]
+        ptr = [[0] * len(f)] * [twoN + 1]
+        newd = e + ["null"] * (len(e))
+        twoLend = 2 * len(e)
         for i in range(N, twoLend):
             newd[i] = "null"
 
         for q in range(1, twoN + 1):
-            t_o0_d_qMinus1 = self.tProbability(o[0], newd[q - 1])
-            if t_o0_d_qMinus1 == 0 or pi[q] == 0:
+            t = self.tProbability(f[0], newd[q - 1])
+            if t == 0 or pi[q] == 0:
                 V[q][0] = - sys.maxint - 1
             else:
-                V[q][0] = log(pi[q]) + log(t_o0_d_qMinus1)
+                V[q][0] = log(pi[q]) + log(t)
 
-        for t in (1, len(o)):
+        for t in (1, len(f)):
             for q in (1, twoN + 1):
                 maximum = - sys.maxint - 1
                 max_q = - sys.maxint - 1
-                t_o_d_qMinus1 = self.tProbability(o[t], newd[q - 1])
+                t = self.tProbability(f[t], newd[q - 1])
                 for q in range(1, twoN + 1):
-                    a_q_prime_q_N = self.aProbability(q_prime, q, N)
-                    if (a_q_prime_q_N != 0) and (t_o_d_qMinus1 != 0):
-                        temp = V[q_prime][t - 1] + log(a_q_prime_q_N) + log(t_o_d_qMinus1)
+                    a = self.aProbability(q_prime, q, N)
+                    if (a != 0) and (t != 0):
+                        temp = V[q_prime][t - 1] + log(a) + log(t)
                         if temp > maximum:
                             maximum = temp
                             max_q = q_prime
@@ -259,17 +263,17 @@ class AlignerHMM():
         max_of_V = - sys.maxint - 1
         q_of_max_of_V = 0
         for q in (1, twoN + 1):
-            if V[q][len(o) - 1] > max_of_V:
-                max_of_V = V[q][len(o) - 1]
+            if V[q][len(f) - 1] > max_of_V:
+                max_of_V = V[q][len(f) - 1]
                 q_of_max_of_V = q
 
         trace = []
         trace.append(q_of_max_of_V)
         q = q_of_max_of_V
-        i = len(o) - 1
+        i = len(f) - 1
         while (i > 0):
             q = ptr[q][i]
-            trace = [q] + trace
+            trace = [q - 1] + trace
             i = i - 1
         return trace
 
@@ -278,11 +282,11 @@ class AlignerHMM():
         alignmentList = []
         for (f, e) in biText:
             N = len(e)
-            bestAlignment = self.logViterbi(N, f, e)
+            bestAlignment = self.logViterbi(f, e)
             line = ""
             for i in range(len(bestAlignment)):
-                if bestAlignment[i] <= N:
-                    line += str(i) + "-" + str(bestAlignment[i] - 1) + " "
+                if bestAlignment[i] <= len(e):
+                    line += str(i) + "-" + str(bestAlignment[i]) + " "
             alignmentList.append(line)
             outputFile.write(line + "\n")
             # sys.stdout.write(line + "\n")
