@@ -21,7 +21,7 @@ class AlignerHMM():
         self.fe_count = modelIBM1.fe_count
         self.t = modelIBM1.t
         self.biText = biText
-        sys.stderr.write("HMM [INFO]: IBM Model 1 Loaded")
+        sys.stderr.write("HMM [INFO]: IBM Model 1 Loaded\n")
         return
 
     def initialiseModel(self, Len):

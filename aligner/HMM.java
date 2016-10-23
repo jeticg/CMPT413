@@ -460,12 +460,12 @@ public class HMM {
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException{
-        int trainingSize = 100000;
+        int trainingSize = 1000;
         int testSize = 1000;
         String alignmentFileName = "alignment";
 
-        String[][] trainBitext = IBM1.readBitext("data/europarl.de","data/europarl.en",trainingSize);
-        String[][] testBitext = IBM1.readBitext("data/europarl.de","data/europarl.en",testSize);
+        String[][] trainBitext = IBM1.readBitext("data/hansards.fr","data/hansards.en",trainingSize);
+        String[][] testBitext = IBM1.readBitext("data/hansards.fr","data/hansards.en",testSize);
 
         IBM1 ibm1 = new IBM1(trainBitext);
 
