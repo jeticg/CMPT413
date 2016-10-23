@@ -28,6 +28,10 @@ class AlignerHMM():
         doubleLen = 2 * Len
         # a: transition parameter
         # pi: initial parameter
+        if self.a:
+            del self.a
+        if self.pi:
+            del self.pi
         self.a = [[[1.0 / Len for x in range(Len + 1)] for y in range(doubleLen + 1)] for z in range(doubleLen + 1)]
         self.pi = [1.0 / doubleLen for x in range(doubleLen + 1)]
         return
@@ -123,8 +127,6 @@ class AlignerHMM():
                 c = defaultdict(float)
 
                 if iteration == 0:
-                    del self.a
-                    del self.pi
                     self.initialiseModel(len(e))
 
                 alpha_hat, c_scaled = self.forwardWithTScaled(f, e)
