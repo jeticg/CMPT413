@@ -116,10 +116,15 @@ class AlignerHMM():
 
             start0_time = time.time()
 
+            sent_count = 0
             for (f, e) in biText:
+                sys.stderr.write("HMM [INFO]: sentence: " + str(sent_count) + "\n")
+                sent_count += 1
                 c = defaultdict(float)
 
                 if iteration == 0:
+                    del self.a
+                    del self.pi
                     self.initialiseModel(len(e))
 
                 alpha_hat, c_scaled = self.forwardWithTScaled(f, e)
@@ -173,10 +178,12 @@ class AlignerHMM():
             twoN = 2 * N
 
             # M-Step
-
+            del self.a
+            del self.pi
+            del self.t
             self.a = [[[0.0 for x in range(N + 1)] for y in range(twoN + 1)] for z in range(twoN + 1)]
             self.pi = [0.0 for x in range(twoN + 1)]
-            self.t = defaultdict()
+            self.t = defaultdict(float)
 
             sys.stderr.write("HMM [INFO]: set " + str(self.targetLengthSet.keys()) + "\n")
             for I in self.targetLengthSet:
@@ -277,7 +284,7 @@ class AlignerHMM():
         i = len(f) - 1
         while (i > 0):
             q = ptr[q][i]
-            trace = [q - 1] + trace
+            trace = [q] + trace
             i = i - 1
         return trace
 
@@ -290,7 +297,7 @@ class AlignerHMM():
             line = ""
             for i in range(len(bestAlignment)):
                 if bestAlignment[i] <= len(e):
-                    line += str(i) + "-" + str(bestAlignment[i]) + " "
+                    line += str(i) + "-" + str(bestAlignment[i]-1) + " "
             alignmentList.append(line)
             outputFile.write(line + "\n")
             # sys.stdout.write(line + "\n")
