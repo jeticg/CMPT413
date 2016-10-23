@@ -14,6 +14,8 @@ class AlignerHMM():
         self.p0H = 0.3
         self.nullEmissionProb = 0.000005
         self.smoothFactor = 0.1
+        self.a = None
+        self.pi = None
         return
 
     def initWithIBM(self, modelIBM1, biText):
