@@ -106,6 +106,7 @@ class AlignerIBM1():
                 line += str(i) + "-" + str(j) + " "
             sys.stdout.write(line + "\n")
         return
+
 if __name__ == '__main__':
     sys.stderr.write("IBM Model 1 Main Programme")
     optparser = optparse.OptionParser()

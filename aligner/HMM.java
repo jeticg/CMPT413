@@ -220,7 +220,7 @@ public class HMM {
                 for (int t = 1; t < T; t++){
                     logLikelihood += -1*Math.log(c_scaled[t]);
                     for (int i = 1; i < N+1; i++){
-                        gamma[i][t] = (alpha_hat[i][t]*beta_hat[i][t])/c_scaled[t];
+                        gamma[i][t] = (alpha_hat[i][t] * beta_hat[i][t])/c_scaled[t];
                         totalGammaDeltaOverAllObservations_t_i[indexMap.get(new Pair<String, String>(y[t-1], x[i-1])).intValue()] += gamma[i][t];
                     }
                 }
@@ -460,7 +460,7 @@ public class HMM {
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException{
-        int trainingSize = 1000;
+        int trainingSize = 10000;
         int testSize = 1000;
         String alignmentFileName = "alignment";
 
