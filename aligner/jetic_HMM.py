@@ -236,9 +236,10 @@ class AlignerHMM():
         twoN = 2 * N
         V = [[0.0 for x in range(len(f))] for y in range(twoN + 1)]
         ptr = [[0 for x in range(len(f))] for y in range(twoN + 1)]
-        newd = e + ["null" for y in range(len(e))]
-        twoLend = 2 * len(e)
-        for i in range(N, twoLend):
+        newd = ["null" for x in range(twoN)]
+        for i in range(len(e)):
+            newd[i] = e[i]
+        for i in range(len(e), twoN):
             newd[i] = "null"
 
         for q in range(1, twoN + 1):
@@ -248,12 +249,12 @@ class AlignerHMM():
             else:
                 V[q][0] = log(self.pi[q]) + log(tPr)
 
-        for t in (1, len(f)):
-            for q in (1, twoN + 1):
+        for t in range(1, len(f)):
+            for q in range(1, twoN + 1):
                 maximum = - sys.maxint - 1
                 max_q = - sys.maxint - 1
                 tPr = self.tProbability(f[t], newd[q - 1])
-                for q in range(1, twoN + 1):
+                for q_prime in range(1, twoN + 1):
                     aPr = self.aProbability(q_prime, q, N)
                     if (aPr != 0) and (tPr != 0):
                         temp = V[q_prime][t - 1] + log(aPr) + log(tPr)
@@ -265,7 +266,7 @@ class AlignerHMM():
 
         max_of_V = - sys.maxint - 1
         q_of_max_of_V = 0
-        for q in (1, twoN + 1):
+        for q in range(1, twoN + 1):
             if V[q][len(f) - 1] > max_of_V:
                 max_of_V = V[q][len(f) - 1]
                 q_of_max_of_V = q
