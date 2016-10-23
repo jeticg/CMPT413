@@ -5,7 +5,6 @@ import os
 import logging
 import time
 from math import log
-from copy import deepcopy
 from jetic_IBM1 import AlignerIBM1
 from collections import defaultdict
 
@@ -22,26 +21,27 @@ class AlignerHMM():
         self.fe_count = modelIBM1.fe_count
         self.t = modelIBM1.t
         self.biText = biText
+        sys.stderr.write("HMM [INFO]: IBM Model 1 Loaded")
         return
 
     def initialiseModel(self, Len):
         doubleLen = 2 * Len
         # a: transition parameter
         # pi: initial parameter
-        self.a = [[[1.0 / Len] * (Len + 1)] * (doubleLen + 1)] * (doubleLen + 1)
-        self.pi = [1.0 / doubleLen] * (doubleLen + 1)
+        self.a = [[[1.0 / Len for x in range(Len + 1)] for y in range(doubleLen + 1)] for z in range(doubleLen + 1)]
+        self.pi = [1.0 / doubleLen for x in range(doubleLen + 1)]
         return
 
     def forwardWithTScaled(self, f, e):
-        alphaScale = [0.0] * (len(f) + 1)
-        alpha = [[0.0] * (len(f) + 1)] * (len(e) + 1)
+        alphaScale = [0.0 for x in range(len(f) + 1)]
+        alpha = [[0.0 for x in range(len(f) + 1)] for y in range(len(e) + 1)]
         alphaSum = 0
 
         for i in range(1, len(e) + 1):
             alpha[i][1] = self.pi[i] * self.t[(f[0], e[i - 1])]
             alphaSum += alpha[i][1]
 
-        alphaScale[1] = 1.0 / alphaSum
+        alphaScale[1] = 1 / alphaSum
         for i in range(1, len(e) + 1):
             alpha[i][1] *= alphaScale[1]
 
@@ -49,25 +49,27 @@ class AlignerHMM():
             alphaSum = 0
             for j in range(1, len(e) + 1):
                 total = 0
-                for i in range(len(e) + 1):
+                for i in range(1, len(e) + 1):
                     total += alpha[i][t - 1] * self.a[i][j][len(e)]
                 alpha[j][t] = self.t[(f[t - 1], e[j - 1])] * total
                 alphaSum += alpha[j][t]
 
-            alphaScale[t + 1] = 1.0 / alphaSum
+            alphaScale[t] = 1.0 / alphaSum
             for i in range(1, len(e) + 1):
-                alpha[i][t + 1] = alphaScale[t + 1] * alpha[i][t + 1]
+                alpha[i][t] = alphaScale[t] * alpha[i][t]
 
         return (alpha, alphaScale)
 
-    def backwardWithTScaled(self, f, e, c_scaled):
-        betaHat = copy.deepcopy(c_scaled)
+    def backwardWithTScaled(self, f, e, alphaScale):
+        betaHat = [[0.0 for x in range(len(f) + 1)] for y in range(len(e) + 1)]
+        for i in range(1, len(e) + 1):
+            betaHat[i][len(f)] = alphaScale[len(f)]
         for t in range(len(f) - 1, 0, -1):
             for i in range(1, len(e) + 1):
                 total = 0
                 for j in range(1, len(e) + 1):
                     total += betaHat[j][t + 1] * self.a[i][j][len(e)] * self.t[(f[t], e[j - 1])]
-                betaHat[i][t] = c_scaled[t] * total
+                betaHat[i][t] = alphaScale[t] * total
         return betaHat
 
     def maxTargetSentenceLength(self, biText):
@@ -90,10 +92,11 @@ class AlignerHMM():
             i += 1
         return (index, biword)
 
-    def baumWelch(self, biText=self.biText, iterations=5):
+    def baumWelch(self, iterations=5):
+        biText = self.biText
         N, self.targetLengthSet = self.maxTargetSentenceLength(biText)
 
-        sys.stderr.write("N " + str(N))
+        sys.stderr.write("HMM [INFO]: N " + str(N))
         indexMap, biword = self.mapBitextToInt(self.fe_count)
 
         L = len(biText)
@@ -105,11 +108,11 @@ class AlignerHMM():
 
             logLikelihood = 0
 
-            totalGammaDeltaOverAllObservations_t_i = [0.0] * sd_size
+            totalGammaDeltaOverAllObservations_t_i = [0.0 for x in range(sd_size)]
             totalGammaDeltaOverAllObservations_t_overall_states_over_dest = defaultdict(float)
-            totalGamma1OverAllObservations = [0.0] * (N + 1)
-            totalC_j_Minus_iOverAllObservations = [[[0.0] * (N + 1)] * (N + 1)] * (N + 1)
-            totalC_l_Minus_iOverAllObservations = [[0.0] * (N + 1)] * (N + 1)
+            totalGamma1OverAllObservations = [0.0 for x in range(N + 1)]
+            totalC_j_Minus_iOverAllObservations = [[[0.0 for x in range(N + 1)] for y in range(N + 1)] for z in range(N + 1)]
+            totalC_l_Minus_iOverAllObservations = [[0.0 for x in range(N + 1)] for y in range(N + 1)]
 
             start0_time = time.time()
 
@@ -122,7 +125,7 @@ class AlignerHMM():
                 alpha_hat, c_scaled = self.forwardWithTScaled(f, e)
                 beta_hat = self.backwardWithTScaled(f, e, c_scaled)
 
-                gamma = [[0.0] * (len(f) + 1)] * (len(e) + 1)
+                gamma = [[0.0 for x in range(len(f) + 1)] for y in range(len(e) + 1)]
 
                 # Setting gamma
                 for t in range(1, len(f)):
@@ -154,7 +157,7 @@ class AlignerHMM():
 
             start_time = time.time()
 
-            sys.stderr.write("likelihood " + str(logLikelihood))
+            sys.stderr.write("HMM [INFO]: likelihood " + str(logLikelihood) + "\n")
             N = len(totalGamma1OverAllObservations) - 1
 
             for k in range(sd_size):
@@ -164,15 +167,15 @@ class AlignerHMM():
 
             end_time = time.time()
 
-            sys.stderr.write("time spent in the end of E-step: " + str(end_time - start_time))
-            sys.stderr.write("time spent in E-step: " + str(end_time - start0_time))
+            sys.stderr.write("HMM [INFO]: time spent in the end of E-step: " + str(end_time - start_time) + "\n")
+            sys.stderr.write("HMM [INFO]: time spent in E-step: " + str(end_time - start0_time) + "\n")
 
             twoN = 2 * N
 
             # M-Step
 
-            self.a = [[[0.0] * (N + 1)] * (twoN + 1)] * (twoN + 1)
-            self.pi = [0.0] * (twoN + 1)
+            self.a = [[[0.0 for x in range(N + 1)] for y in range(twoN + 1)] for z in range(twoN + 1)]
+            self.pi = [0.0 for x in range(twoN + 1)]
             self.t = defaultdict()
 
             sys.stderr.write("set " + str(self.targetLengthSet))
@@ -189,8 +192,8 @@ class AlignerHMM():
                 self.t[(f, e)] = totalGammaDeltaOverAllObservations_t_i[k] / totalGammaDeltaOverAllObservations_t_overall_states_over_dest[e]
 
             end2_time = time.time()
-            sys.stderr.write("time spent in M-step: " + str(end2_time - end_time))
-            sys.stderr.write("iteration " + str(iteration))
+            sys.stderr.write("HMM [INFO]: time spent in M-step: " + str(end2_time - end_time) + "\n")
+            sys.stderr.write("HMM [INFO]: iteration " + str(iteration) + "\n")
 
         return
 
@@ -293,30 +296,32 @@ class AlignerHMM():
         outputFile.close()
         return alignmentList
 
-optparser = optparse.OptionParser()
-optparser.add_option("-d", "--datadir", dest="datadir", default="data", help="data directory (default=data)")
-optparser.add_option("-p", "--prefix", dest="fileprefix", default="hansards", help="prefix of parallel data files (default=hansards)")
-optparser.add_option("-e", "--english", dest="english", default="en", help="suffix of English (target language) filename (default=en)")
-optparser.add_option("-f", "--french", dest="french", default="fr", help="suffix of French (source language) filename (default=fr)")
-optparser.add_option("-l", "--logfile", dest="logfile", default=None, help="filename for logging output")
-optparser.add_option("-t", "--threshold", dest="threshold", default=0.5, type="float", help="threshold for alignment (default=0.5)")
-optparser.add_option("-n", "--num_sentences", dest="num_sents", default=sys.maxint, type="int", help="Number of sentences to use for training and alignment")
-optparser.add_option("-v", "--num_tests", dest="num_tests", default=1000, type="int", help="Number of sentences to use for testing")
-optparser.add_option("-i", "--iterations", dest="iter", default=5, type="int", help="Number of iterations to train")
-(opts, _) = optparser.parse_args()
-f_data = "%s.%s" % (os.path.join(opts.datadir, opts.fileprefix), opts.french)
-e_data = "%s.%s" % (os.path.join(opts.datadir, opts.fileprefix), opts.english)
+if __name__ == '__main__':
+    sys.stderr.write("HMM Main Programme\n")
+    optparser = optparse.OptionParser()
+    optparser.add_option("-d", "--datadir", dest="datadir", default="data", help="data directory (default=data)")
+    optparser.add_option("-p", "--prefix", dest="fileprefix", default="hansards", help="prefix of parallel data files (default=hansards)")
+    optparser.add_option("-e", "--english", dest="english", default="en", help="suffix of English (target language) filename (default=en)")
+    optparser.add_option("-f", "--french", dest="french", default="fr", help="suffix of French (source language) filename (default=fr)")
+    optparser.add_option("-l", "--logfile", dest="logfile", default=None, help="filename for logging output")
+    optparser.add_option("-t", "--threshold", dest="threshold", default=0.5, type="float", help="threshold for alignment (default=0.5)")
+    optparser.add_option("-n", "--num_sentences", dest="num_sents", default=sys.maxint, type="int", help="Number of sentences to use for training and alignment")
+    optparser.add_option("-v", "--num_tests", dest="num_tests", default=1000, type="int", help="Number of sentences to use for testing")
+    optparser.add_option("-i", "--iterations", dest="iter", default=5, type="int", help="Number of iterations to train")
+    (opts, _) = optparser.parse_args()
+    f_data = "%s.%s" % (os.path.join(opts.datadir, opts.fileprefix), opts.french)
+    e_data = "%s.%s" % (os.path.join(opts.datadir, opts.fileprefix), opts.english)
 
-if opts.logfile:
-    logging.basicConfig(filename=opts.logfile, filemode='w', level=logging.INFO)
+    if opts.logfile:
+        logging.basicConfig(filename=opts.logfile, filemode='w', level=logging.INFO)
 
-biText = [[sentence.strip().split() for sentence in pair] for pair in zip(open(f_data), open(e_data))[:opts.num_sents]]
-biText2 = [[sentence.strip().split() for sentence in pair] for pair in zip(open(f_data), open(e_data))[:opts.num_tests]]
+    biText = [[sentence.strip().split() for sentence in pair] for pair in zip(open(f_data), open(e_data))[:opts.num_sents]]
+    biText2 = [[sentence.strip().split() for sentence in pair] for pair in zip(open(f_data), open(e_data))[:opts.num_tests]]
 
-alignerIBM1 = AlignerIBM1()
-alignerIBM1.train(biText, opts.iter)
-alignerHMM = AlignerHMM()
-alignerHMM.initWithIBM(alignerIBM1, biText)
-alignerHMM.baumWelch()
-alignerHMM.multiplyOneMinusP0H()
-alignerHMM.findBestAlignmentsForAll_AER(biText2, "output_jetic_HMM")
+    alignerIBM1 = AlignerIBM1()
+    alignerIBM1.train(biText, opts.iter)
+    alignerHMM = AlignerHMM()
+    alignerHMM.initWithIBM(alignerIBM1, biText)
+    alignerHMM.baumWelch()
+    alignerHMM.multiplyOneMinusP0H()
+    alignerHMM.findBestAlignmentsForAll_AER(biText2, "output_jetic_HMM")
