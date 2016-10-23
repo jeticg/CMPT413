@@ -74,12 +74,12 @@ class AlignerHMM():
 
     def maxTargetSentenceLength(self, biText):
         maxLength = 0
-        targetLengthSet = []
+        targetLengthSet = defaultdict(int)
         for (f, e) in biText:
             tempLength = len(e)
             if tempLength > maxLength:
                 maxLength = tempLength
-            targetLengthSet.append(tempLength)
+            targetLengthSet[tempLength] += 1
         return (maxLength, targetLengthSet)
 
     def mapBitextToInt(self, sd_count):
@@ -96,7 +96,7 @@ class AlignerHMM():
         biText = self.biText
         N, self.targetLengthSet = self.maxTargetSentenceLength(biText)
 
-        sys.stderr.write("HMM [INFO]: N " + str(N))
+        sys.stderr.write("HMM [INFO]: N " + str(N) + "\n")
         indexMap, biword = self.mapBitextToInt(self.fe_count)
 
         L = len(biText)
@@ -120,7 +120,7 @@ class AlignerHMM():
                 c = defaultdict(float)
 
                 if iteration == 0:
-                    self.initialiseModel(N)
+                    self.initialiseModel(len(e))
 
                 alpha_hat, c_scaled = self.forwardWithTScaled(f, e)
                 beta_hat = self.backwardWithTScaled(f, e, c_scaled)
@@ -178,7 +178,7 @@ class AlignerHMM():
             self.pi = [0.0 for x in range(twoN + 1)]
             self.t = defaultdict()
 
-            sys.stderr.write("set " + str(self.targetLengthSet))
+            sys.stderr.write("HMM [INFO]: set " + str(self.targetLengthSet.keys()) + "\n")
             for I in self.targetLengthSet:
                 for i in range(1, I + 1):
                     for j in range(1, I + 1):
@@ -234,29 +234,29 @@ class AlignerHMM():
         '''
         N = len(e)
         twoN = 2 * N
-        V = [[0.0] * len(f)] * [twoN + 1]
-        ptr = [[0] * len(f)] * [twoN + 1]
-        newd = e + ["null"] * (len(e))
+        V = [[0.0 for x in range(len(f))] for y in range(twoN + 1)]
+        ptr = [[0 for x in range(len(f))] for y in range(twoN + 1)]
+        newd = e + ["null" for y in range(len(e))]
         twoLend = 2 * len(e)
         for i in range(N, twoLend):
             newd[i] = "null"
 
         for q in range(1, twoN + 1):
-            t = self.tProbability(f[0], newd[q - 1])
-            if t == 0 or pi[q] == 0:
+            tPr = self.tProbability(f[0], newd[q - 1])
+            if tPr == 0 or self.pi[q] == 0:
                 V[q][0] = - sys.maxint - 1
             else:
-                V[q][0] = log(pi[q]) + log(t)
+                V[q][0] = log(self.pi[q]) + log(tPr)
 
         for t in (1, len(f)):
             for q in (1, twoN + 1):
                 maximum = - sys.maxint - 1
                 max_q = - sys.maxint - 1
-                t = self.tProbability(f[t], newd[q - 1])
+                tPr = self.tProbability(f[t], newd[q - 1])
                 for q in range(1, twoN + 1):
-                    a = self.aProbability(q_prime, q, N)
-                    if (a != 0) and (t != 0):
-                        temp = V[q_prime][t - 1] + log(a) + log(t)
+                    aPr = self.aProbability(q_prime, q, N)
+                    if (aPr != 0) and (tPr != 0):
+                        temp = V[q_prime][t - 1] + log(aPr) + log(tPr)
                         if temp > maximum:
                             maximum = temp
                             max_q = q_prime
