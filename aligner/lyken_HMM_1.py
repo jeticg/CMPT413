@@ -10,6 +10,7 @@ from jetic_IBM1 import AlignerIBM1
 from collections import defaultdict
 
 
+
 class AlignerHMM():
     def __init__(self):
         self.p0H = 0.3
@@ -31,32 +32,22 @@ class AlignerHMM():
         doubleLen = 2 * Len
         # a: transition parameter
         # pi: initial parameter
-
-        tmp = 1.0 / Len
-        # for z in range(doubleLen + 1):
-        #     for y in range(doubleLen + 1):
-        #         for x in range(Len + 1):
-        #             self.a[z][y][x] = tmp
-        self.a.fill(tmp)
-
-
-        tmp = 1.0 / doubleLen
-        # for x in range(doubleLen + 1):
-        #     self.pi[x] = tmp
-        self.pi.fill(tmp)
-
+        if self.a:
+            del self.a
+        if self.pi:
+            del self.pi
+        self.a = [[[1.0 / Len for x in range(Len + 1)] for y in range(doubleLen + 1)] for z in range(doubleLen + 1)]
+        self.pi = [1.0 / doubleLen for x in range(doubleLen + 1)]
         return
 
-    def forwardWithTScaled(self, f, e, small_t):
-        # alphaScale = [0.0 for x in range(len(f) + 1)]
-        # alpha = [[0.0 for x in range(len(f) + 1)] for y in range(len(e) + 1)]
-        alphaScale = np.zeros((len(f) + 1))
-        alpha = np.zeros((len(e) + 1, len(f) + 1))
+    def forwardWithTScaled(self, f, e, small_t = None):
+        alphaScale = [0.0 for x in range(len(f) + 1)]
+        alpha = [[0.0 for x in range(len(f) + 1)] for y in range(len(e) + 1)]
         alphaSum = 0
 
-
         for i in range(1, len(e) + 1):
-            alpha[i][1] = self.pi[i] * small_t[0][i - 1]
+            # alpha[i][1] = self.pi[i] * self.t[(f[0], e[i - 1])]
+            alpha[i][1] = self.pi[i] * small_t[0][i-1]
             alphaSum += alpha[i][1]
 
         alphaScale[1] = 1 / alphaSum
@@ -69,28 +60,26 @@ class AlignerHMM():
                 total = 0
                 for i in range(1, len(e) + 1):
                     total += alpha[i][t - 1] * self.a[i][j][len(e)]
+                # alpha[j][t] = self.t[(f[t - 1], e[j - 1])] * total
                 alpha[j][t] = small_t[t - 1][j - 1] * total
                 alphaSum += alpha[j][t]
 
             alphaScale[t] = 1.0 / alphaSum
             for i in range(1, len(e) + 1):
                 alpha[i][t] = alphaScale[t] * alpha[i][t]
-            # alpha[:, t] *= alphaScale[t]
+
         return (alpha, alphaScale)
 
-    def backwardWithTScaled(self, f, e, alphaScale, small_t):
-        # betaHat = [[0.0 for x in range(len(f) + 1)] for y in range(len(e) + 1)]
-        betaHat = np.zeros((len(e) + 1, len(f) + 1))
-
+    def backwardWithTScaled(self, f, e, alphaScale, small_t = None):
+        betaHat = [[0.0 for x in range(len(f) + 1)] for y in range(len(e) + 1)]
         for i in range(1, len(e) + 1):
             betaHat[i][len(f)] = alphaScale[len(f)]
-        # betaHat[:] = alphaScale
-
         for t in range(len(f) - 1, 0, -1):
             for i in range(1, len(e) + 1):
                 total = 0
                 for j in range(1, len(e) + 1):
-                    total += betaHat[j][t + 1] * self.a[i][j][len(e)] * small_t[t][j - 1]
+                    # total += betaHat[j][t + 1] * self.a[i][j][len(e)] * self.t[(f[t], e[j - 1])]
+                    total += betaHat[j][t + 1] * self.a[i][j][len(e)] * small_t[t][j-1]
                 betaHat[i][t] = alphaScale[t] * total
         return betaHat
 
@@ -114,6 +103,7 @@ class AlignerHMM():
             i += 1
         return (index, biword)
 
+
     def baumWelch(self, iterations=5):
         avoid_zero = 10 ** -21
         biText = self.biText
@@ -126,76 +116,100 @@ class AlignerHMM():
         sd_size = len(indexMap)
         totalGammaDeltaOverAllObservations_t_i = None
         totalGammaDeltaOverAllObservations_t_overall_states_over_dest = None
-
-        twoN = 2 * N
-
-        # self.a = [[[0.0 for x in range(N + 1)] for y in range(twoN + 1)] for z in range(twoN + 1)]
-        # self.pi = [0.0 for x in range(twoN + 1)]
-        self.a = np.zeros((twoN + 1, twoN + 1, N + 1))
-        self.pi = np.zeros((twoN + 1))
         for iteration in range(iterations):
 
-            logLikelihood = 0.0
+            logLikelihood = 0
 
-            # totalGammaDeltaOverAllObservations_t_i = [0.0 for x in range(sd_size)]
-            # totalGammaDeltaOverAllObservations_t_overall_states_over_dest = defaultdict(float)
-            # totalGamma1OverAllObservations = [0.0 for x in range(N + 1)]
-            # totalC_j_Minus_iOverAllObservations = [[[0.0 for x in range(N + 1)] for y in range(N + 1)] for z in range(N + 1)]
-            # totalC_l_Minus_iOverAllObservations = [[0.0 for x in range(N + 1)] for y in range(N + 1)]
+            totalGammaDeltaOverAllObservations_t_i = [0.0 for x in range(sd_size)]
+            totalGammaDeltaOverAllObservations_t_overall_states_over_dest = defaultdict(float)
+            totalGamma1OverAllObservations = [0.0 for x in range(N + 1)]
+            totalC_j_Minus_iOverAllObservations = [[[0.0 for x in range(N + 1)] for y in range(N + 1)] for z in range(N + 1)]
+            totalC_l_Minus_iOverAllObservations = [[0.0 for x in range(N + 1)] for y in range(N + 1)]
 
             totalGammaDeltaOverAllObservations_t_i = np.zeros((sd_size))
-            totalGammaDeltaOverAllObservations_t_overall_states_over_dest = defaultdict(float)
             totalGamma1OverAllObservations = np.zeros((N + 1))
             totalC_j_Minus_iOverAllObservations = np.zeros((N + 1, N + 1, N + 1))
             totalC_l_Minus_iOverAllObservations = np.zeros((N + 1, N + 1))
 
-
-            # gamma = [[0.0 for x in range(N * 2 + 1)] for y in range(N + 1)]
-            # small_t = [[0.0 for x in range(N*2 + 1)] for y in range(N + 1)]
-
-            gamma = np.zeros((N + 1, N * 2 + 1))
-            small_t = np.zeros((N + 1, N * 2 + 1))
-
             start0_time = time.time()
 
             sent_count = 0
+
             for (f, e) in biText:
-                if sent_count % 100 == 0:
-                    sys.stderr.write("HMM [INFO]: sentence: " + str(sent_count) + " of iteration " + str(iteration) + "\n")
+                small_t = np.zeros((len(f), len(e)))
+                for i in range(len(f)):
+                    for j in range(len(e)):
+                        small_t[i][j] = self.t[(f[i], e[j])]
+
+                # sys.stderr.write("HMM [INFO]: sentence: " + str(sent_count) + "\n")
                 sent_count += 1
                 c = defaultdict(float)
 
                 if iteration == 0:
                     self.initialiseModel(len(e))
 
-                for i in range(len(f)):
-                    for j in range(len(e)):
-                        # print self.t[(f[i], e[j])], type(self.t[(f[i], e[j])])
-                        small_t[i][j] = self.t[(f[i], e[j])]
+                alpha_hat, c_scaled = self.forwardWithTScaled(f, e, small_t=small_t)
+                beta_hat = self.backwardWithTScaled(f, e, c_scaled, small_t=small_t)
 
-                alpha_hat, c_scaled = self.forwardWithTScaled(f, e, small_t)
-                beta_hat = self.backwardWithTScaled(f, e, c_scaled, small_t)
-
+                gamma = [[0.0 for x in range(len(f) + 1)] for y in range(len(e) + 1)] # TODO: is it correct?
                 gamma = np.zeros((len(e) + 1, len(f) + 1))
+                test_gamma = np.zeros((len(e) + 1, len(f) + 1))
+
                 # Setting gamma
                 for t in range(1, len(f) + 1):
                     logLikelihood += -1 * log(c_scaled[t])
                     for i in range(1, len(e) + 1):
-                        gamma[i][t] = (alpha_hat[i][t] * beta_hat[i][t]) / c_scaled[t]
+                        gamma[i][t] = (alpha_hat[i][t] * beta_hat[i][t])  / c_scaled[t]
                         totalGammaDeltaOverAllObservations_t_i[indexMap[(f[t - 1], e[i - 1])]] += gamma[i][t]
 
-                logLikelihood += -1 * log(c_scaled[len(f)])
+                '''
+                t = len(f)
+                logLikelihood += -1 * log(c_scaled[t])
+                for i in range(1, len(e) + 1):
+                    gamma[i][t] = (alpha_hat[i][t] * beta_hat[i][t])  / c_scaled[t]
+                    totalGammaDeltaOverAllObservations_t_i[indexMap[(f[t - 1], e[i - 1])]] += gamma[i][t]
+                '''
 
+                # vectorized opeartion
+                test_c_scaled = np.array(c_scaled) + avoid_zero
+                test_alpha_hat = np.array(alpha_hat)
+                test_beta_hat = np.array(beta_hat)
+                test_logLikelihood = -1 * np.sum(np.log(test_c_scaled + avoid_zero))
+                test_gamma = test_alpha_hat * test_beta_hat / test_c_scaled.T
+
+                if not np.allclose(test_gamma, gamma, rtol=1e-03): # compare equal or not
+                    print test_c_scaled.shape
+                    print "gamma wrong!"
+                    print c_scaled
+                    print test_c_scaled
+                    # print "===================================================================================="
+                    # print alpha_hat
+                    # print beta_hat
+                    print "===================================================================================="
+                    print test_alpha_hat
+                    print test_beta_hat
+                    print "===================================================================================="
+                    print test_gamma
+                    print gamma
+                    exit(-1)
+
+                # cannot be vectorized
                 for t in range(1, len(f)):
                     for i in range(1, len(e) + 1):
                         for j in range(1, len(e) + 1):
-                            c[j - i] += alpha_hat[i][t] * self.a[i][j][len(e)] * small_t[t][j - 1] * beta_hat[j][t + 1]
+                            # c[j - i] += alpha_hat[i][t] * self.a[i][j][len(e)] * self.t[(f[t], e[j - 1])] * beta_hat[j][t + 1]
+                            c[j - i] += alpha_hat[i][t] * self.a[i][j][len(e)] * small_t[t][j-1] * beta_hat[j][t + 1]
 
+                # cannot be vectorized
                 for i in range(1, len(e) + 1):
                     for j in range(1, len(e) + 1):
                         totalC_j_Minus_iOverAllObservations[i][j][len(e)] += c[j - i]
                         totalC_l_Minus_iOverAllObservations[i][len(e)] += c[j - i]
+
+
+                for i in range(1, len(e) + 1):
                     totalGamma1OverAllObservations[i] += gamma[i][1]
+
             # end of loop over bitext
 
             start_time = time.time()
@@ -213,18 +227,18 @@ class AlignerHMM():
             sys.stderr.write("HMM [INFO]: time spent in the end of E-step: " + str(end_time - start_time) + "\n")
             sys.stderr.write("HMM [INFO]: time spent in E-step: " + str(end_time - start0_time) + "\n")
 
+            twoN = 2 * N
+
             # M-Step
             del self.a
             del self.pi
             del self.t
-            # self.a = [[[0.0 for x in range(N + 1)] for y in range(twoN + 1)] for z in range(twoN + 1)]
-            # self.pi = [0.0 for x in range(twoN + 1)]
-            self.a = np.zeros((twoN + 1, twoN + 1, N + 1))
-            self.pi = np.zeros((twoN + 1))
-
+            self.a = [[[0.0 for x in range(N + 1)] for y in range(twoN + 1)] for z in range(twoN + 1)]
+            self.pi = [0.0 for x in range(twoN + 1)]
             self.t = defaultdict(float)
 
             sys.stderr.write("HMM [INFO]: set " + str(self.targetLengthSet.keys()) + "\n")
+            avoid_zero = 10 ** -21
             for I in self.targetLengthSet:
                 for i in range(1, I + 1):
                     for j in range(1, I + 1):
@@ -235,11 +249,11 @@ class AlignerHMM():
 
             for k in range(sd_size):
                 f, e = biword[k]
-                self.t[(f, e)] = totalGammaDeltaOverAllObservations_t_i[k] / (totalGammaDeltaOverAllObservations_t_overall_states_over_dest[e] + avoid_zero)
+                self.t[(f, e)] = totalGammaDeltaOverAllObservations_t_i[k] / totalGammaDeltaOverAllObservations_t_overall_states_over_dest[e]
 
             end2_time = time.time()
             sys.stderr.write("HMM [INFO]: time spent in M-step: " + str(end2_time - end_time) + "\n")
-            sys.stderr.write("HMM [INFO]: iteration " + str(iteration) + " complete\n")
+            sys.stderr.write("HMM [INFO]: iteration " + str(iteration) + "\n")
 
         return
 
@@ -352,7 +366,9 @@ if __name__ == '__main__':
     optparser.add_option("-f", "--french", dest="french", default="fr", help="suffix of French (source language) filename (default=fr)")
     optparser.add_option("-l", "--logfile", dest="logfile", default=None, help="filename for logging output")
     optparser.add_option("-t", "--threshold", dest="threshold", default=0.5, type="float", help="threshold for alignment (default=0.5)")
-    optparser.add_option("-n", "--num_sentences", dest="num_sents", default=sys.maxint, type="int", help="Number of sentences to use for training and alignment")
+    # optparser.add_option("-n", "--num_sentences", dest="num_sents", default=sys.maxint, type="int", help="Number of sentences to use for training and alignment")
+    optparser.add_option("-n", "--num_sentences", dest="num_sents", default=10000, type="int",
+                         help="Number of sentences to use for training and alignment")
     optparser.add_option("-v", "--num_tests", dest="num_tests", default=1000, type="int", help="Number of sentences to use for testing")
     optparser.add_option("-i", "--iterations", dest="iter", default=5, type="int", help="Number of iterations to train")
     (opts, _) = optparser.parse_args()
