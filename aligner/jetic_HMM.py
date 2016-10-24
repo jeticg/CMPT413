@@ -30,21 +30,23 @@ class AlignerHMM():
         doubleLen = 2 * Len
         # a: transition parameter
         # pi: initial parameter
-        if self.a:
-            del self.a
-        if self.pi:
-            del self.pi
-        self.a = [[[1.0 / Len for x in range(Len + 1)] for y in range(doubleLen + 1)] for z in range(doubleLen + 1)]
-        self.pi = [1.0 / doubleLen for x in range(doubleLen + 1)]
+        tmp = 1.0 / Len
+        for z in range(doubleLen + 1):
+            for y in range(doubleLen + 1):
+                for x in range(Len + 1):
+                    self.a[z][y][x] = tmp
+        tmp = 1.0 / doubleLen
+        for x in range(doubleLen + 1):
+            self.pi[x] = tmp
         return
 
-    def forwardWithTScaled(self, f, e):
+    def forwardWithTScaled(self, f, e, small_t):
         alphaScale = [0.0 for x in range(len(f) + 1)]
         alpha = [[0.0 for x in range(len(f) + 1)] for y in range(len(e) + 1)]
         alphaSum = 0
 
         for i in range(1, len(e) + 1):
-            alpha[i][1] = self.pi[i] * self.t[(f[0], e[i - 1])]
+            alpha[i][1] = self.pi[i] * small_t[0][i - 1]
             alphaSum += alpha[i][1]
 
         alphaScale[1] = 1 / alphaSum
@@ -57,7 +59,7 @@ class AlignerHMM():
                 total = 0
                 for i in range(1, len(e) + 1):
                     total += alpha[i][t - 1] * self.a[i][j][len(e)]
-                alpha[j][t] = self.t[(f[t - 1], e[j - 1])] * total
+                alpha[j][t] = small_t[t - 1][j - 1] * total
                 alphaSum += alpha[j][t]
 
             alphaScale[t] = 1.0 / alphaSum
@@ -66,7 +68,7 @@ class AlignerHMM():
 
         return (alpha, alphaScale)
 
-    def backwardWithTScaled(self, f, e, alphaScale):
+    def backwardWithTScaled(self, f, e, alphaScale, small_t):
         betaHat = [[0.0 for x in range(len(f) + 1)] for y in range(len(e) + 1)]
         for i in range(1, len(e) + 1):
             betaHat[i][len(f)] = alphaScale[len(f)]
@@ -74,7 +76,7 @@ class AlignerHMM():
             for i in range(1, len(e) + 1):
                 total = 0
                 for j in range(1, len(e) + 1):
-                    total += betaHat[j][t + 1] * self.a[i][j][len(e)] * self.t[(f[t], e[j - 1])]
+                    total += betaHat[j][t + 1] * self.a[i][j][len(e)] * small_t[t][j - 1]
                 betaHat[i][t] = alphaScale[t] * total
         return betaHat
 
@@ -110,6 +112,11 @@ class AlignerHMM():
         totalGammaDeltaOverAllObservations_t_i = None
         totalGammaDeltaOverAllObservations_t_overall_states_over_dest = None
 
+        twoN = 2 * N
+
+        self.a = [[[0.0 for x in range(N + 1)] for y in range(twoN + 1)] for z in range(twoN + 1)]
+        self.pi = [0.0 for x in range(twoN + 1)]
+
         for iteration in range(iterations):
 
             logLikelihood = 0
@@ -120,47 +127,46 @@ class AlignerHMM():
             totalC_j_Minus_iOverAllObservations = [[[0.0 for x in range(N + 1)] for y in range(N + 1)] for z in range(N + 1)]
             totalC_l_Minus_iOverAllObservations = [[0.0 for x in range(N + 1)] for y in range(N + 1)]
 
+            gamma = [[0.0 for x in range(N*2 + 1)] for y in range(N + 1)]
+            small_t = [[0.0 for x in range(N*2 + 1)] for y in range(N + 1)]
+
             start0_time = time.time()
 
             sent_count = 0
             for (f, e) in biText:
-                sys.stderr.write("HMM [INFO]: sentence: " + str(sent_count) + "\n")
+                if sent_count % 100:
+                    sys.stderr.write("HMM [INFO]: sentence: " + str(sent_count) + " of iteration " + str(iteration) + "\n")
                 sent_count += 1
                 c = defaultdict(float)
 
                 if iteration == 0:
                     self.initialiseModel(len(e))
 
-                alpha_hat, c_scaled = self.forwardWithTScaled(f, e)
-                beta_hat = self.backwardWithTScaled(f, e, c_scaled)
+                for i in range(len(f)):
+                    for j in range(len(e)):
+                        small_t[i][j] = self.t[(f[i], e[j])]
 
-                gamma = [[0.0 for x in range(len(f) + 1)] for y in range(len(e) + 1)]
+                alpha_hat, c_scaled = self.forwardWithTScaled(f, e, small_t)
+                beta_hat = self.backwardWithTScaled(f, e, c_scaled, small_t)
 
                 # Setting gamma
-                for t in range(1, len(f)):
+                for t in range(1, len(f) + 1):
                     logLikelihood += -1 * log(c_scaled[t])
                     for i in range(1, len(e) + 1):
                         gamma[i][t] = (alpha_hat[i][t] * beta_hat[i][t]) / c_scaled[t]
                         totalGammaDeltaOverAllObservations_t_i[indexMap[(f[t - 1], e[i - 1])]] += gamma[i][t]
 
-                t = len(f)
-                logLikelihood += -1 * log(c_scaled[t])
-                for i in range(1, len(e) + 1):
-                    gamma[i][t] = (alpha_hat[i][t] * beta_hat[i][t]) / c_scaled[t]
-                    totalGammaDeltaOverAllObservations_t_i[indexMap[(f[t - 1], e[i - 1])]] += gamma[i][t]
+                logLikelihood += -1 * log(c_scaled[len(f)])
 
                 for t in range(1, len(f)):
                     for i in range(1, len(e) + 1):
                         for j in range(1, len(e) + 1):
-                            c[j - i] += alpha_hat[i][t] * self.a[i][j][len(e)] * self.t[(f[t], e[j - 1])] * beta_hat[j][t + 1]
+                            c[j - i] += alpha_hat[i][t] * self.a[i][j][len(e)] * small_t[t][j - 1] * beta_hat[j][t + 1]
 
                 for i in range(1, len(e) + 1):
                     for j in range(1, len(e) + 1):
                         totalC_j_Minus_iOverAllObservations[i][j][len(e)] += c[j - i]
-                    for l in range(1, len(e) + 1):
-                        totalC_l_Minus_iOverAllObservations[i][len(e)] += c[l - i]
-
-                for i in range(1, len(e) + 1):
+                        totalC_l_Minus_iOverAllObservations[i][len(e)] += c[j - i]
                     totalGamma1OverAllObservations[i] += gamma[i][1]
             # end of loop over bitext
 
@@ -179,8 +185,6 @@ class AlignerHMM():
             sys.stderr.write("HMM [INFO]: time spent in the end of E-step: " + str(end_time - start_time) + "\n")
             sys.stderr.write("HMM [INFO]: time spent in E-step: " + str(end_time - start0_time) + "\n")
 
-            twoN = 2 * N
-
             # M-Step
             del self.a
             del self.pi
@@ -193,18 +197,18 @@ class AlignerHMM():
             for I in self.targetLengthSet:
                 for i in range(1, I + 1):
                     for j in range(1, I + 1):
-                        self.a[i][j][I] = totalC_j_Minus_iOverAllObservations[i][j][I] / totalC_l_Minus_iOverAllObservations[i][I]
+                        self.a[i][j][I] = totalC_j_Minus_iOverAllObservations[i][j][I] / (totalC_l_Minus_iOverAllObservations[i][I] + 0.0000000000000000000000000000000000001)
 
             for i in range(1, N + 1):
                 self.pi[i] = totalGamma1OverAllObservations[i] * (1.0 / L)
 
             for k in range(sd_size):
                 f, e = biword[k]
-                self.t[(f, e)] = totalGammaDeltaOverAllObservations_t_i[k] / totalGammaDeltaOverAllObservations_t_overall_states_over_dest[e]
+                self.t[(f, e)] = totalGammaDeltaOverAllObservations_t_i[k] / (totalGammaDeltaOverAllObservations_t_overall_states_over_dest[e] + 0.0000000000000000000000000000000000001)
 
             end2_time = time.time()
             sys.stderr.write("HMM [INFO]: time spent in M-step: " + str(end2_time - end_time) + "\n")
-            sys.stderr.write("HMM [INFO]: iteration " + str(iteration) + "\n")
+            sys.stderr.write("HMM [INFO]: iteration " + str(iteration) + " complete\n")
 
         return
 
