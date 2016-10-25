@@ -128,7 +128,7 @@ class AlignerHMM():
             totalC_l_Minus_iOverAllObservations = [[0.0 for x in range(N + 1)] for y in range(N + 1)]
 
             gamma = [[0.0 for x in range(N*2 + 1)] for y in range(N + 1)]
-            small_t = [[0.0 for x in range(N*2 + 1)] for y in range(N + 1)]
+            small_t = [[0.0 for x in range(N*2 + 1)] for y in range(N*2 + 1)]
 
             start0_time = time.time()
 

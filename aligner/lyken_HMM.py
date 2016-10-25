@@ -151,7 +151,7 @@ class AlignerHMM():
             # small_t = [[0.0 for x in range(N*2 + 1)] for y in range(N + 1)]
 
             gamma = np.zeros((N + 1, N * 2 + 1))
-            small_t = np.zeros((N + 1, N * 2 + 1))
+            small_t = np.zeros((N * 2 + 1, N * 2 + 1))
 
             start0_time = time.time()
 
