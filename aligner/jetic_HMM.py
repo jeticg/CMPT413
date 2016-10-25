@@ -134,7 +134,7 @@ class AlignerHMM():
 
             sent_count = 0
             for (f, e) in biText:
-                if sent_count % 100:
+                if sent_count % 100 == 0:
                     sys.stderr.write("HMM [INFO]: sentence: " + str(sent_count) + " of iteration " + str(iteration) + "\n")
                 sent_count += 1
                 c = defaultdict(float)

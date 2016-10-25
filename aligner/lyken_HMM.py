@@ -39,7 +39,6 @@ class AlignerHMM():
         #             self.a[z][y][x] = tmp
         self.a.fill(tmp)
 
-
         tmp = 1.0 / doubleLen
         # for x in range(doubleLen + 1):
         #     self.pi[x] = tmp
@@ -53,7 +52,6 @@ class AlignerHMM():
         alphaScale = np.zeros((len(f) + 1))
         alpha = np.zeros((len(e) + 1, len(f) + 1))
         alphaSum = 0
-
 
         for i in range(1, len(e) + 1):
             alpha[i][1] = self.pi[i] * small_t[0][i - 1]
@@ -148,7 +146,6 @@ class AlignerHMM():
             totalGamma1OverAllObservations = np.zeros((N + 1))
             totalC_j_Minus_iOverAllObservations = np.zeros((N + 1, N + 1, N + 1))
             totalC_l_Minus_iOverAllObservations = np.zeros((N + 1, N + 1))
-
 
             # gamma = [[0.0 for x in range(N * 2 + 1)] for y in range(N + 1)]
             # small_t = [[0.0 for x in range(N*2 + 1)] for y in range(N + 1)]
@@ -371,4 +368,4 @@ if __name__ == '__main__':
     alignerHMM.initWithIBM(alignerIBM1, biText)
     alignerHMM.baumWelch()
     alignerHMM.multiplyOneMinusP0H()
-    alignerHMM.findBestAlignmentsForAll_AER(biText2, "output_jetic_HMM")
+    alignerHMM.findBestAlignmentsForAll_AER(biText2, "output_lyken_HMM")
