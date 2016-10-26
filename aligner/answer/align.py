@@ -297,7 +297,7 @@ class AlignerHMM():
         return trace
 
     def findBestAlignmentsForAll_AER(self, biText, fileName):
-        outputFile = open(fileName, "w")
+        # outputFile = open(fileName, "w")
         alignmentList = []
         for (f, e) in biText:
             N = len(e)
@@ -307,8 +307,8 @@ class AlignerHMM():
                 if bestAlignment[i] <= len(e):
                     line += str(i) + "-" + str(bestAlignment[i]-1) + " "
             alignmentList.append(line)
-            outputFile.write(line + "\n")
-            # sys.stdout.write(line + "\n")
+            # outputFile.write(line + "\n")
+            sys.stdout.write(line + "\n")
         outputFile.close()
         return alignmentList
 
