@@ -9,10 +9,10 @@ Note: Due to Python is a dynamic interpreted language, and training HMM model in
 ## IBM1 model
 Code is in model_IMB1.py
 
-  for each (f, e):
-    for each fi in f:
-      find ej that maximize t(fi|ej)
-      align fi to ej
+      for each (f, e):
+        for each fi in f:
+          find ej that maximize t(fi|ej)
+          align fi to ej
 
 It reaches performance of 0.438.
 
