@@ -4,7 +4,8 @@ We implement both IMB1 and HMM model. And with HMM model, we produce the best sc
 ### How to run (align.py uses HMM model)
 Note: Due to Python is a dynamic interpreted language, and training HMM model involves a lot of nested loops(line 150~170, align.py), it takes about **6 hours** to train on whole dataset. Please be patient while waiting.
 
-    python answers/align.py -n 100000 -d data
+     python answer/align.py -p europarl -f de -n 100000 > output.a
+     head -1000 output.a > upload.a
 
 ## IBM1 model
 Code is in model_IMB1.py
