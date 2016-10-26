@@ -1,5 +1,5 @@
 # Group Adam
-We implement both IMB1 and HMM model. And with HMM model, we produce the best score in leaderboard 0.32. (Oct 22) 
+We implement both IMB1 and HMM model. And with HMM model, we produce the best score in leaderboard 0.32. (Oct 22)
 
 ### How to run (align.py uses HMM model)
 Note: Due to Python is a dynamic interpreted language, and training in HMM model involves a lot of nested loops, it takes about **6 hours** to train on whole dataset. Please be patient while waiting.
@@ -14,7 +14,7 @@ Code is in model_IMB1.py
       find ej that maximize t(fi|ej)
       align fi to ej
 
-It reaches performance of 0.46.
+It reaches performance of 0.438.
 
 ## HMM model
 $$Pr(f_{1}^{J}, a_{1}^{J}|e_{1}^{I})$$
