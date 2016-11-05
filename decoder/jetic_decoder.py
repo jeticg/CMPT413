@@ -5,6 +5,62 @@ import models
 from math import log
 from collections import namedtuple
 
+ngram_stats = namedtuple("ngram_stats", "logprob, backoff")
+
+
+class TargetSentence():
+    def __init__(self,
+                 lm,
+                 length=0,
+                 sourceMark=[],
+                 targetSentenceEntity=(),
+                 tmScore=0.0,
+                 lmScore=0.0):
+
+        if length == 0 and sourceMark == []:
+            raise ValueError("SENTENCE [ERROR]: Invalid initialisation")
+        if length != 0 and sourceMark == []:
+            self.sourceMark = [0 for x in range(length)]
+        else:
+            self.sourceMark = sourceMark
+        self.targetSentenceEntity = targetSentenceEntity
+        self.tmScore = tmScore
+        self.lmScore = lmScore
+        self.lm = lm
+        self.lm_state = lm.begin()
+        return
+
+    def key(self):
+        # Generate the unique key for the sentence
+        key = {sourceMark: self.sourceMark, entity: self.targetSentenceEntity}
+        return key
+
+    def overlapWithPhrase(self, phraseStartPosition, phraseEndPosition):
+        # Check if the source phrase overlaps with the sentence
+        if sum(self.sourceMark[phraseStartPosition:phraseEndPosition]) == 0:
+            return False
+        return True
+
+    def addPhrase(self, phraseStartPosition, phraseEndPosition, targetPhrase):
+        # mark positions in sourceMark as translated
+        for i in range(phraseStartPosition, phraseEndPosition):
+            self.sourceMark[i] = 1
+
+        # add target phrase to sentence
+        self.targetSentenceEntity = self.targetSentenceEntity + targetPhrase.english.split()
+
+        # calculate language score
+        lm_state = lm.begin()
+        self.lmScore = 0.0
+        for word in self.targetSentenceEntity:
+            (lm_state, word_logprob) = lm.score(lm_state, word)
+            logprob += word_logprob
+        self.lmScore += lm.end(lm_state)
+
+        # update translation score
+        self.tmScore += targetPhrase.logprob
+        return
+
 
 class Decoder():
     def __init__(self, tm, lm):
@@ -16,9 +72,10 @@ class Decoder():
         alpha = 0.9
         return log(distance * alpha)
 
-    def decode(self,
-               f):
+    def decodeDefault(self,
+               sentence):
 
+        f = sentence
         tm = self.tm
         hypothesis = namedtuple("hypothesis", "logprob, lm_state, predecessor, phrase")
         initial_hypothesis = hypothesis(0.0, self.lm.begin(), None, None)
@@ -27,8 +84,8 @@ class Decoder():
         for i, stack in enumerate(stacks[:-1]):
             for h in sorted(stack.itervalues(), key=lambda h: -h.logprob)[:opts.s]:  # prune
                 for j in xrange(i+1, len(f)+1):
-                    if f[i:j] in tm:
-                        for phrase in tm[f[i:j]]:
+                    if f[i:j] in self.tm:
+                        for phrase in self.tm[f[i:j]]:
                             logprob = h.logprob + phrase.logprob
                             lm_state = h.lm_state
                             for word in phrase.english.split():
@@ -50,6 +107,29 @@ class Decoder():
             tm_logprob = extract_tm_logprob(winner)
             sys.stderr.write("LM = %f, TM = %f, Total = %f\n" %
                 (winner.logprob - tm_logprob, tm_logprob, winner.logprob))
+        return
+
+    def decode(self, sentence, max_phrase=5):
+        stack = [()]
+        newStack = []
+        for i in range(sentence):
+            # adding the ith target word/phrase
+            for j in range(sentence):
+                # choose the jth source word as a start
+                for k in range(j+1, max(len(sentence), j+max_phrase+1)):
+                    # the phrase choosen to add this time is from j to k
+                    sourcePhrase = sentence[j:k]
+                    for targetPhrase in self.tm[sourcePhrase]:
+                        # for each translation, combine with every existing targetSentence in stack
+                        for targetSentence in stack:
+                            # Check if the sourcePhrase overlaps with the one in targetSentence
+                            # Combine targetSentence and targetPhrase
+                            # add the combined targetSentence to newStack
+                            raise NotImplemented
+            stack = newStack
+            newStack = []
+        return
+
 
 if __name__ == '__main__':
     optparser = optparse.OptionParser()
