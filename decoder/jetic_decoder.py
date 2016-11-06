@@ -123,12 +123,12 @@ class Decoder():
                 (winner.logprob - tm_logprob, tm_logprob, winner.logprob))
         return
 
-    def decode(self, sentence, maxPhraseLen=5, maxStackSize=1000):
+    def decode(self, sentence, maxPhraseLen=10, maxStackSize=100):
         bestScore = - sys.maxint - 1
         bestSentence = ()
         emptyTargetSentence = TargetSentence(length=len(sentence))
         stack = {}
-        stack[emptyTargetSentence.key()] = emptyTargetSentence.tmScore, 0
+        stack[emptyTargetSentence.key()] = emptyTargetSentence.tmScore
         newStack = {}
         for i in range(len(sentence)):
             sys.stderr.write("processing the " + str(i+1) + "th phrase of " + str(len(sentence)) + ", stack size: " + str(len(stack)) + "\n")
@@ -148,7 +148,7 @@ class Decoder():
                         for targetSentenceKey in stack:
                             # Reconstruct sentence
                             targetSentence = TargetSentence(key=targetSentenceKey,
-                                                            tmScore=stack[targetSentenceKey][0])
+                                                            tmScore=stack[targetSentenceKey])
 
                             # Check if overlapped
                             if targetSentence.overlapWithPhrase(j, k):
@@ -168,10 +168,10 @@ class Decoder():
                                 # Add the combined targetSentence to newStack if translation incomplete
                                 key = targetSentence.key()
                                 if key in newStack:
-                                    if targetSentence.tmScore > newStack[key][0]:
-                                        newStack[key] = targetSentence.tmScore, targetSentence.length()
+                                    if targetSentence.tmScore > newStack[key][2]:
+                                        newStack[key] = targetSentence.totalScore(self.lm), targetSentence.length(), targetSentence.tmScore
                                 else:
-                                    newStack[key] = targetSentence.tmScore, targetSentence.length()
+                                    newStack[key] = targetSentence.totalScore(self.lm), targetSentence.length(), targetSentence.tmScore
                             # Current targetSentences processed, proceed with next targetSentence in stack
 
                         # All targetSentences in stack processed, proceed with next translation
@@ -194,7 +194,7 @@ class Decoder():
                 if counter == maxStackSize:
                     continue
                 counter += 1
-                stack[item[0]] = item[1]
+                stack[item[0]] = item[1][2]
 
         # All words processed, we now have the best sentence stored in bestSentence
         print " ".join(bestSentence)
@@ -208,7 +208,7 @@ if __name__ == '__main__':
     optparser.add_option("-l", "--language-model", dest="lm", default="data/lm", help="File containing ARPA-format language model (default=data/lm)")
     optparser.add_option("-n", "--num_sentences", dest="num_sents", default=sys.maxint, type="int", help="Number of sentences to decode (default=no limit)")
     optparser.add_option("-k", "--translations-per-phrase", dest="k", default=1, type="int", help="Limit on number of translations to consider per phrase (default=1)")
-    optparser.add_option("-s", "--stack-size", dest="s", default=1, type="int", help="Maximum stack size (default=1)")
+    optparser.add_option("-s", "--stack-size", dest="s", default=500, type="int", help="Maximum stack size (default=1)")
     optparser.add_option("-v", "--verbose", dest="verbose", action="store_true", default=False,    help="Verbose mode (default=off)")
     opts = optparser.parse_args()[0]
 
@@ -225,5 +225,8 @@ if __name__ == '__main__':
 
     sys.stderr.write("Decoding %s...\n" % (opts.input,))
     decoder = Decoder(tm, lm)
+    count = 0
     for f in french:
-        decoder.decode(f)
+        count += 1
+        sys.stderr.write("Decoding sentence " + str(count) + " of " + str(len(french)) + "\n")
+        decoder.decode(f, maxPhraseLen=opts.k, maxStackSize=opts.s)
