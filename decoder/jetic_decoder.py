@@ -58,7 +58,7 @@ class TargetSentence():
         # update translation score
         self.tmScore += targetPhrase.logprob + self.distance(self.lastPos, phraseStartPosition)
         # update lastPos
-        self.lastPos = phraseEndPosition
+        self.lastPos = phraseEndPosition - 1
         return
 
     def distance(self, endOfLast, startOfCurrent):
@@ -66,8 +66,8 @@ class TargetSentence():
         # since all the scores are logd, assume beta = log(alpha)
         # log(d(endOfLast, startOfcurrent)) = beta * (abs(startOfCurrent - endOfLast - 1))
 
-        # The beta value here is log(0.9)
-        beta = -0.10536051565782628
+        # The beta value here is log(0.5)
+        beta = -0.6931471805599453
         dis = abs(startOfCurrent - endOfLast - 1)
         return beta * dis
 
