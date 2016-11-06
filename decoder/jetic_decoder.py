@@ -57,12 +57,12 @@ class TargetSentence():
     def lmScore(self, lm):
         # calculate language score
         lm_state = lm.begin()
-        lmScore = 0.0
+        logprob = 0.0
         for word in self.targetSentenceEntity:
             (lm_state, word_logprob) = lm.score(lm_state, word)
             logprob += word_logprob
-        lmScore += lm.end(lm_state)
-        return lmScore
+        logprob += lm.end(lm_state)
+        return logprob
 
     def totalScore(self, lm):
         return self.lmScore(lm) + self.tmScore
@@ -128,11 +128,11 @@ class Decoder():
         stack[emptyTargetSentence.key()] = emptyTargetSentence.tmScore
         newStack = {}
         for i in range(len(sentence)):
-            sys.stderr.write("processing the " + str(i) + "th phrase, stack size: " + str(len(stack)) + "\n")
+            sys.stderr.write("processing the " + str(i+1) + "th phrase of " + str(len(sentence)) + ", stack size: " + str(len(stack)) + "\n")
             # adding the ith target word/phrase
             for j in range(len(sentence)):
                 # choose the jth source word as a start
-                for k in range(j+1, min(len(sentence), j+max_phrase+1)):
+                for k in range(j+1, min(len(sentence)+1, j+max_phrase)):
                     # the phrase choosen to add this time is from j to k
                     sourcePhrase = sentence[j:k]
                     # Skip if the phrase doesn't exist
@@ -140,6 +140,7 @@ class Decoder():
                         continue
 
                     for targetPhrase in self.tm[sourcePhrase]:
+                        # print "source:", " ".join(sourcePhrase), "; target translation:", targetPhrase.english
                         # for each translation, combine with every existing targetSentence in stack
                         for targetSentenceKey in stack:
                             # Reconstruct sentence
@@ -156,10 +157,11 @@ class Decoder():
 
                             # Compare with best score if translation complete, and skip adding to newStack
                             if targetSentence.completed():
-                                if targetSentence.score() > bestScore:
-                                    bestScore = targetSentence.score()
+                                if targetSentence.totalScore(self.lm) > bestScore:
+                                    bestScore = targetSentence.totalScore(self.lm)
                                     bestSentence = targetSentence.targetSentenceEntity
                             else:
+                                # print "Completion:", i+1, "out of", len(sentence), ":", " ".join(targetSentence.targetSentenceEntity)
                                 # Add the combined targetSentence to newStack if translation incomplete
                                 key = targetSentence.key()
                                 if key in newStack:
@@ -180,7 +182,7 @@ class Decoder():
             newStack = {}
 
         # All words processed, we now have the best sentence stored in bestSentence
-        print bestSentence
+        print " ".join(bestSentence)
         return
 
 
