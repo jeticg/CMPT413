@@ -67,6 +67,9 @@ class TargetSentence():
     def totalScore(self, lm):
         return self.lmScore(lm) + self.tmScore
 
+    def length(self):
+        return len(self.targetSentenceEntity)
+
     def completed(self):
         if sum(self.sourceMark) == len(self.sourceMark):
             return True
@@ -120,19 +123,19 @@ class Decoder():
                 (winner.logprob - tm_logprob, tm_logprob, winner.logprob))
         return
 
-    def decode(self, sentence, max_phrase=5):
+    def decode(self, sentence, maxPhraseLen=5, maxStackSize=1000):
         bestScore = - sys.maxint - 1
         bestSentence = ()
         emptyTargetSentence = TargetSentence(length=len(sentence))
         stack = {}
-        stack[emptyTargetSentence.key()] = emptyTargetSentence.tmScore
+        stack[emptyTargetSentence.key()] = emptyTargetSentence.tmScore, 0
         newStack = {}
         for i in range(len(sentence)):
             sys.stderr.write("processing the " + str(i+1) + "th phrase of " + str(len(sentence)) + ", stack size: " + str(len(stack)) + "\n")
             # adding the ith target word/phrase
             for j in range(len(sentence)):
                 # choose the jth source word as a start
-                for k in range(j+1, min(len(sentence)+1, j+max_phrase)):
+                for k in range(j+1, min(len(sentence)+1, j+maxPhraseLen)):
                     # the phrase choosen to add this time is from j to k
                     sourcePhrase = sentence[j:k]
                     # Skip if the phrase doesn't exist
@@ -145,7 +148,7 @@ class Decoder():
                         for targetSentenceKey in stack:
                             # Reconstruct sentence
                             targetSentence = TargetSentence(key=targetSentenceKey,
-                                                            tmScore=stack[targetSentenceKey])
+                                                            tmScore=stack[targetSentenceKey][0])
 
                             # Check if overlapped
                             if targetSentence.overlapWithPhrase(j, k):
@@ -165,10 +168,10 @@ class Decoder():
                                 # Add the combined targetSentence to newStack if translation incomplete
                                 key = targetSentence.key()
                                 if key in newStack:
-                                    if targetSentence.tmScore > newStack[key]:
-                                        newStack[key] = targetSentence.tmScore
+                                    if targetSentence.tmScore > newStack[key][0]:
+                                        newStack[key] = targetSentence.tmScore, targetSentence.length()
                                 else:
-                                    newStack[key] = targetSentence.tmScore
+                                    newStack[key] = targetSentence.tmScore, targetSentence.length()
                             # Current targetSentences processed, proceed with next targetSentence in stack
 
                         # All targetSentences in stack processed, proceed with next translation
@@ -178,8 +181,20 @@ class Decoder():
                 # All phrases processed, proceed with next starting position for phrase
 
             # The ith phrase added to newStack. Exchange newStack and stack
-            stack = newStack
-            newStack = {}
+            # do pruning
+            stack = {}
+            sortedStack = sorted(newStack.items(), key=lambda x: x[1], reverse=True)
+            sortedStack = sorted(sortedStack, key=lambda x: x[1][1], reverse=True)
+            counter = 0
+            currentLen = sys.maxint
+            for item in sortedStack:
+                if item[1][1] != currentLen:
+                    counter = 0
+                    currentLen = item[1][1]
+                if counter == maxStackSize:
+                    continue
+                counter += 1
+                stack[item[0]] = item[1]
 
         # All words processed, we now have the best sentence stored in bestSentence
         print " ".join(bestSentence)
