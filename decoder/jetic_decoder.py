@@ -17,6 +17,9 @@ class TargetSentence():
                  targetSentenceEntity=(),
                  tmScore=0.0,
                  key=None):
+        # There are two ways for creating a new TargetSentence instance
+        # 1. use the length parameter
+        # 2. use the key and tmScore parameter. (Will ignore all other parameters)
         if key:
             self.sourceMark, self.targetSentenceEntity, self.lastPos = key
             self.sourceMark = list(self.sourceMark)
@@ -59,9 +62,14 @@ class TargetSentence():
         return
 
     def distance(self, endOfLast, startOfCurrent):
-        alpha = 0.9
+        # d(endOfLast, startOfcurrent) = alpha ^ (abs(startOfCurrent - endOfLast - 1))
+        # since all the scores are logd, assume beta = log(alpha)
+        # log(d(endOfLast, startOfcurrent)) = beta * (abs(startOfCurrent - endOfLast - 1))
+
+        # The beta value here is log(0.9)
+        beta = -0.10536051565782628
         dis = abs(startOfCurrent - endOfLast - 1)
-        return alpha * dis
+        return beta * dis
 
     def lmScore(self, lm):
         # calculate language score
@@ -192,7 +200,9 @@ class Decoder():
             # The ith phrase added to newStack. Exchange newStack and stack
             # do pruning
             stack = {}
+            # Sort by score first
             sortedStack = sorted(newStack.items(), key=lambda x: x[1], reverse=True)
+            # Sort by length
             sortedStack = sorted(sortedStack, key=lambda x: x[1][1], reverse=True)
             counter = 0
             currentLen = sys.maxint
@@ -203,6 +213,7 @@ class Decoder():
                 if counter == maxStackSize:
                     continue
                 counter += 1
+                # We only need the tmScore to be added to the new stack inorder to create the object afterwards
                 stack[item[0]] = item[1][2]
 
         # All words processed, we now have the best sentence stored in bestSentence
