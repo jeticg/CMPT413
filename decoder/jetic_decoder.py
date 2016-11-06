@@ -21,7 +21,7 @@ class TargetSentence():
         # 1. use the length parameter
         # 2. use the key and tmScore parameter. (Will ignore all other parameters)
         if key:
-            self.sourceMark, self.targetSentenceEntity, self.lastPos = key
+            self.sourceMark, self.targetSentenceEntity, self.lastPos = deepcopy(key)
             self.sourceMark = list(self.sourceMark)
             self.tmScore = tmScore
             return
@@ -85,7 +85,7 @@ class TargetSentence():
         return self.lmScore(lm) + self.tmScore
 
     def length(self):
-        return len(self.targetSentenceEntity)
+        return sum(self.sourceMark)
 
     def completed(self):
         if sum(self.sourceMark) == len(self.sourceMark):
@@ -152,7 +152,7 @@ class Decoder():
             # adding the ith target word/phrase
             for j in range(len(sentence)):
                 # choose the jth source word as a start
-                for k in range(j+1, min(len(sentence)+1, j+maxPhraseLen)):
+                for k in range(j+1, min(len(sentence), j+maxPhraseLen)+1):
                     # the phrase choosen to add this time is from j to k
                     sourcePhrase = sentence[j:k]
                     # Skip if the phrase doesn't exist
