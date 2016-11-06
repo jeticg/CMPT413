@@ -18,7 +18,7 @@ class TargetSentence():
                  tmScore=0.0,
                  key=None):
         if key:
-            self.sourceMark, self.targetSentenceEntity = key
+            self.sourceMark, self.targetSentenceEntity, self.lastPos = key
             self.sourceMark = list(self.sourceMark)
             self.tmScore = tmScore
             return
@@ -27,15 +27,17 @@ class TargetSentence():
         if length != 0 and sourceMark == []:
             self.sourceMark = [0 for x in range(length)]
             self.targetSentenceEntity = targetSentenceEntity
+            self.lastPos = -1
         else:
             self.sourceMark = sourceMark
             self.targetSentenceEntity = targetSentenceEntity
+            self.lastPos = -1
         self.tmScore = tmScore
         return
 
     def key(self):
         # Generate the unique key for the sentence
-        key = (tuple(self.sourceMark), self.targetSentenceEntity)
+        key = (tuple(self.sourceMark), self.targetSentenceEntity, self.lastPos)
         return key
 
     def overlapWithPhrase(self, phraseStartPosition, phraseEndPosition):
@@ -51,8 +53,15 @@ class TargetSentence():
         # add target phrase to sentence
         self.targetSentenceEntity = self.targetSentenceEntity + tuple(targetPhrase.english.split())
         # update translation score
-        self.tmScore += targetPhrase.logprob
+        self.tmScore += targetPhrase.logprob + self.distance(self.lastPos, phraseStartPosition)
+        # update lastPos
+        self.lastPos = phraseEndPosition
         return
+
+    def distance(self, endOfLast, startOfCurrent):
+        alpha = 0.9
+        dis = abs(startOfCurrent - endOfLast - 1)
+        return alpha * dis
 
     def lmScore(self, lm):
         # calculate language score
@@ -142,7 +151,7 @@ class Decoder():
                     if sourcePhrase not in self.tm:
                         continue
 
-                    for targetPhrase in self.tm[sourcePhrase]:
+                    for targetPhrase in self.tm[sourcePhrase][:maxTranslation]:
                         # print "source:", " ".join(sourcePhrase), "; target translation:", targetPhrase.english
                         # for each translation, combine with every existing targetSentence in stack
                         for targetSentenceKey in stack:
