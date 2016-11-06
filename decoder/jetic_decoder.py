@@ -123,7 +123,7 @@ class Decoder():
                 (winner.logprob - tm_logprob, tm_logprob, winner.logprob))
         return
 
-    def decode(self, sentence, maxPhraseLen=10, maxStackSize=100):
+    def decode(self, sentence, maxPhraseLen=10, maxStackSize=100, maxTranslation=sys.maxint):
         bestScore = - sys.maxint - 1
         bestSentence = ()
         emptyTargetSentence = TargetSentence(length=len(sentence))
@@ -207,7 +207,7 @@ if __name__ == '__main__':
     optparser.add_option("-t", "--translation-model", dest="tm", default="data/tm", help="File containing translation model (default=data/tm)")
     optparser.add_option("-l", "--language-model", dest="lm", default="data/lm", help="File containing ARPA-format language model (default=data/lm)")
     optparser.add_option("-n", "--num_sentences", dest="num_sents", default=sys.maxint, type="int", help="Number of sentences to decode (default=no limit)")
-    optparser.add_option("-k", "--translations-per-phrase", dest="k", default=10, type="int", help="Limit on number of translations to consider per phrase (default=1)")
+    optparser.add_option("-k", "--translations-per-phrase", dest="k", default=sys.maxint, type="int", help="Limit on number of translations to consider per phrase (default=1)")
     optparser.add_option("-s", "--stack-size", dest="s", default=500, type="int", help="Maximum stack size (default=1)")
     optparser.add_option("-v", "--verbose", dest="verbose", action="store_true", default=False,    help="Verbose mode (default=off)")
     opts = optparser.parse_args()[0]
@@ -229,4 +229,4 @@ if __name__ == '__main__':
     for f in french:
         count += 1
         sys.stderr.write("Decoding sentence " + str(count) + " of " + str(len(french)) + "\n")
-        decoder.decode(f, maxPhraseLen=opts.k, maxStackSize=opts.s)
+        decoder.decode(f, maxPhraseLen=10, maxStackSize=opts.s, maxTranslation=opts.k)
