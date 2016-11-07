@@ -2,7 +2,7 @@
 import optparse
 import sys
 import models
-from math import log
+from math import log10
 from collections import namedtuple
 from copy import deepcopy
 
@@ -63,11 +63,11 @@ class TargetSentence():
 
     def distance(self, endOfLast, startOfCurrent):
         # d(endOfLast, startOfcurrent) = alpha ^ (abs(startOfCurrent - endOfLast - 1))
-        # since all the scores are logd, assume beta = log(alpha)
-        # log(d(endOfLast, startOfcurrent)) = beta * (abs(startOfCurrent - endOfLast - 1))
+        # since all the scores are logd, assume beta = log10(alpha)
+        # log10(d(endOfLast, startOfcurrent)) = beta * (abs(startOfCurrent - endOfLast - 1))
 
-        # The beta value here is log(0.5)
-        beta = -0.6931471805599453
+        # The beta value here is log10(0.9)
+        beta = -0.045757490560675115
         dis = abs(startOfCurrent - endOfLast - 1)
         return beta * dis
 
