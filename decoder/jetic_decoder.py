@@ -99,10 +99,6 @@ class Decoder():
         self.lm = lm
         return
 
-    def d(self, distance):
-        alpha = 0.9
-        return log(distance * alpha)
-
     def decodeDefault(self,
                sentence):
 
