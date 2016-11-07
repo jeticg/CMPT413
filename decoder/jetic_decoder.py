@@ -163,14 +163,14 @@ class Decoder():
                         # print "source:", " ".join(sourcePhrase), "; target translation:", targetPhrase.english
                         # for each translation, combine with every existing targetSentence in stack
                         for targetSentenceKey in stack:
+                            # Check if overlapped
+                            if j <= targetSentenceKey[2] and targetSentenceKey[2] < k:
+                                continue
+                            if sum(targetSentenceKey[0][j:k]) != 0:
+                                continue
                             # Reconstruct sentence
                             targetSentence = TargetSentence(key=targetSentenceKey,
                                                             tmScore=stack[targetSentenceKey])
-
-                            # Check if overlapped
-                            if targetSentence.overlapWithPhrase(j, k):
-                                # overlapped, skip this sentence
-                                continue
 
                             # Add phrase to sentence
                             targetSentence.addPhrase(j, k, targetPhrase)
@@ -198,6 +198,7 @@ class Decoder():
                 # All phrases processed, proceed with next starting position for phrase
 
             # The ith phrase added to newStack. Exchange newStack and stack
+            sys.stderr.write("processed the " + str(i+1) + "th phrase of " + str(len(sentence)) + ", stack size before pruning: " + str(len(newStack)) + "\n")
             # do pruning
             stack = {}
             # Sort by score first
