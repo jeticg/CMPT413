@@ -209,7 +209,7 @@ class Decoder():
             stack = [[] for x in range(len(sentence)+1)]
             stackSize = 0
             for length in range(1, len(sentence)+1):
-                sys.stderr.write("Doing pruning for length: " + str(length) + "; size before pruning: " + str(len(newStack[length])) + "\n")
+                # sys.stderr.write("Doing pruning for length: " + str(length) + "; size before pruning: " + str(len(newStack[length])) + "\n")
                 # Sort by score
                 sortedStack = sorted(newStack[length].items(), key=lambda x: x[1], reverse=True)
                 for item in sortedStack[:maxStackSize]:
