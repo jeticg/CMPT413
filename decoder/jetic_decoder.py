@@ -110,7 +110,7 @@ class Decoder():
         stacks[0][self.lm.begin()] = initial_hypothesis
         for i, stack in enumerate(stacks[:-1]):
             for h in sorted(stack.itervalues(), key=lambda h: -h.logprob)[:opts.s]:  # prune
-                for j in xrange(i+1, len(f)+1):
+                for j in xrange(i + 1, len(f) + 1):
                     if f[i:j] in self.tm:
                         for phrase in self.tm[f[i:j]]:
                             logprob = h.logprob + phrase.logprob
@@ -140,18 +140,18 @@ class Decoder():
         bestScore = - sys.maxint - 1
         bestSentence = ()
         emptyTargetSentence = TargetSentence(length=len(sentence))
-        stack = [[] for x in range(len(sentence)+1)]
+        stack = [[] for x in range(len(sentence) + 1)]
         stack[0].append((emptyTargetSentence.key(), emptyTargetSentence.tmScore))
         stackSize = 1
-        newStack = [{} for x in range(len(sentence)+1)]
-        minNewStack = [-sys.maxint for x in range(len(sentence)+1)]
+        newStack = [{} for x in range(len(sentence) + 1)]
+        minNewStack = [-sys.maxint for x in range(len(sentence) + 1)]
         for i in range(len(sentence)):
             if not verbose:
-                sys.stderr.write("processing the " + str(i+1) + "th phrase of " + str(len(sentence)) + ", stack size: " + str(stackSize) + "\n")
+                sys.stderr.write("processing the " + str(i + 1) + "th phrase of " + str(len(sentence)) + ", stack size: " + str(stackSize) + "\n")
             # adding the ith target word/phrase
             for j in range(len(sentence)):
                 # choose the jth source word as a start
-                for k in range(j+1, min(len(sentence), j+maxPhraseLen)+1):
+                for k in range(j + 1, min(len(sentence), j + maxPhraseLen) + 1):
                     # the phrase choosen to add this time is from j to k
                     sourcePhrase = sentence[j:k]
                     # Skip if the phrase doesn't exist
@@ -161,9 +161,9 @@ class Decoder():
                     for targetPhrase in self.tm[sourcePhrase][:maxTranslation]:
                         # print "source:", " ".join(sourcePhrase), "; target translation:", targetPhrase.english
                         # for each translation, combine with every existing targetSentence in stack
-                        for stackLength in range(len(sentence)+1):
+                        for stackLength in range(len(sentence) + 1):
                             # check if the phrase size is getting too big
-                            if stackLength + k-j > len(sentence):
+                            if stackLength + k - j > len(sentence):
                                 break
                             for targetSentenceKey, targetSentenceScore in stack[stackLength]:
                                 # Check if overlapped
@@ -173,7 +173,7 @@ class Decoder():
                                     continue
 
                                 # Calculate resulting length
-                                length = sum(targetSentenceKey[0]) + k-j
+                                length = sum(targetSentenceKey[0]) + k - j
 
                                 # Generate min of newStack when size of the stack hits maximum
                                 # if its already generated, and if the current score is already lower than min, skip
@@ -216,9 +216,9 @@ class Decoder():
 
             # The ith phrase added to newStack. Exchange newStack and stack
             # do pruning
-            stack = [[] for x in range(len(sentence)+1)]
+            stack = [[] for x in range(len(sentence) + 1)]
             stackSize = 0
-            for length in range(1, len(sentence)+1):
+            for length in range(1, len(sentence) + 1):
                 # sys.stderr.write("Doing pruning for length: " + str(length) + "; size before pruning: " + str(len(newStack[length])) + "\n")
                 # Sort by score
                 sortedStack = sorted(newStack[length].items(), key=lambda x: x[1], reverse=True)
@@ -226,8 +226,8 @@ class Decoder():
                     # only tmScore matters
                     stack[length].append((item[0], item[1][1]))
                     stackSize += 1
-            newStack = [{} for x in range(len(sentence)+1)]
-            minNewStack = [-sys.maxint-1 for x in range(len(sentence)+1)]
+            newStack = [{} for x in range(len(sentence) + 1)]
+            minNewStack = [-sys.maxint - 1 for x in range(len(sentence) + 1)]
 
         # All words processed, we now have the best sentence stored in bestSentence
         print " ".join(bestSentence)
