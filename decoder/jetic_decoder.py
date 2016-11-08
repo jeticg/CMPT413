@@ -242,7 +242,8 @@ if __name__ == '__main__':
     optparser.add_option("-n", "--num_sentences", dest="num_sents", default=sys.maxint, type="int", help="Number of sentences to decode (default=no limit)")
     optparser.add_option("-k", "--translations-per-phrase", dest="k", default=sys.maxint, type="int", help="Limit on number of translations to consider per phrase (default=1)")
     optparser.add_option("-s", "--stack-size", dest="s", default=500, type="int", help="Maximum stack size (default=1)")
-    optparser.add_option("-v", "--verbose", dest="verbose", action="store_true", default=False,    help="Verbose mode (default=off)")
+    optparser.add_option("-p", "--max-phrase-length", dest="p", default=10, type="int", help="Maximum phrase length (default=10)")
+    optparser.add_option("-v", "--verbose", dest="verbose", action="store_true", default=False, help="Verbose mode (default=off)")
     opts = optparser.parse_args()[0]
 
     # TM stands for translation model
@@ -262,4 +263,4 @@ if __name__ == '__main__':
     for f in french:
         count += 1
         sys.stderr.write("Decoding sentence " + str(count) + " of " + str(len(french)) + "\n")
-        decoder.decode(f, maxPhraseLen=10, maxStackSize=opts.s, maxTranslation=opts.k, verbose=opts.verbose)
+        decoder.decode(f, maxPhraseLen=opts.p, maxStackSize=opts.s, maxTranslation=opts.k, verbose=opts.verbose)
