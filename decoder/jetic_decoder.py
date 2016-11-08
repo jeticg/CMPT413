@@ -136,7 +136,7 @@ class Decoder():
                 (winner.logprob - tm_logprob, tm_logprob, winner.logprob))
         return
 
-    def decode(self, sentence, maxPhraseLen=10, maxStackSize=100, maxTranslation=sys.maxint):
+    def decode(self, sentence, maxPhraseLen=10, maxStackSize=100, maxTranslation=sys.maxint, verbose=False):
         bestScore = - sys.maxint - 1
         bestSentence = ()
         emptyTargetSentence = TargetSentence(length=len(sentence))
@@ -144,8 +144,10 @@ class Decoder():
         stack[0].append((emptyTargetSentence.key(), emptyTargetSentence.tmScore))
         stackSize = 1
         newStack = [{} for x in range(len(sentence)+1)]
+        minNewStack = [-sys.maxint for x in range(len(sentence)+1)]
         for i in range(len(sentence)):
-            sys.stderr.write("processing the " + str(i+1) + "th phrase of " + str(len(sentence)) + ", stack size: " + str(stackSize) + "\n")
+            if not verbose:
+                sys.stderr.write("processing the " + str(i+1) + "th phrase of " + str(len(sentence)) + ", stack size: " + str(stackSize) + "\n")
             # adding the ith target word/phrase
             for j in range(len(sentence)):
                 # choose the jth source word as a start
@@ -169,6 +171,19 @@ class Decoder():
                                     continue
                                 if sum(targetSentenceKey[0][j:k]) != 0:
                                     continue
+
+                                # Calculate resulting length
+                                length = sum(targetSentenceKey[0]) + k-j
+
+                                # Generate min of newStack when size of the stack hits maximum
+                                # if its already generated, and if the current score is already lower than min, skip
+                                if minNewStack[length] == -sys.maxint:
+                                    if (len(newStack[length]) == maxStackSize):
+                                        minNewStack[length] = min(newStack[length].items(), key=lambda x: x[1][0])
+                                        minNewStack[length] = minNewStack[length][1][0]
+                                elif minNewStack[length] >= targetSentenceScore:
+                                    continue
+
                                 # Reconstruct sentence
                                 targetSentence = TargetSentence(key=targetSentenceKey,
                                                                 tmScore=targetSentenceScore)
@@ -185,7 +200,6 @@ class Decoder():
                                     # print "Completion:", i+1, "out of", len(sentence), ":", " ".join(targetSentence.targetSentenceEntity)
                                     # Add the combined targetSentence to newStack if translation incomplete
                                     key = targetSentence.key()
-                                    length = targetSentence.length()
                                     if key in newStack[length]:
                                         if targetSentence.tmScore <= newStack[length][key][1]:
                                             continue
@@ -213,6 +227,7 @@ class Decoder():
                     stack[length].append((item[0], item[1][1]))
                     stackSize += 1
             newStack = [{} for x in range(len(sentence)+1)]
+            minNewStack = [-sys.maxint-1 for x in range(len(sentence)+1)]
 
         # All words processed, we now have the best sentence stored in bestSentence
         print " ".join(bestSentence)
@@ -247,4 +262,4 @@ if __name__ == '__main__':
     for f in french:
         count += 1
         sys.stderr.write("Decoding sentence " + str(count) + " of " + str(len(french)) + "\n")
-        decoder.decode(f, maxPhraseLen=10, maxStackSize=opts.s, maxTranslation=opts.k)
+        decoder.decode(f, maxPhraseLen=10, maxStackSize=opts.s, maxTranslation=opts.k, verbose=opts.verbose)
