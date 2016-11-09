@@ -97,6 +97,7 @@ class Decoder():
     def __init__(self, tm, lm):
         self.tm = tm
         self.lm = lm
+        self.answers = []
         return
 
     def decodeDefault(self,
@@ -136,7 +137,14 @@ class Decoder():
                 (winner.logprob - tm_logprob, tm_logprob, winner.logprob))
         return
 
-    def decode(self, sentence, maxPhraseLen=10, maxStackSize=100, maxTranslation=sys.maxint, verbose=False):
+    def decode(self,
+               sentence,
+               maxPhraseLen=10,
+               maxStackSize=100,
+               maxTranslation=sys.maxint,
+               saveToList=False,
+               verbose=False):
+
         bestScore = - sys.maxint - 1
         bestSentence = ()
         emptyTargetSentence = TargetSentence(length=len(sentence))
@@ -193,6 +201,8 @@ class Decoder():
 
                                 # Compare with best score if translation complete, and skip adding to newStack
                                 if targetSentence.completed():
+                                    if saveToList:
+                                        self.addToAnswerSet(targetSentence)
                                     if targetSentence.totalScore(self.lm) > bestScore:
                                         bestScore = targetSentence.totalScore(self.lm)
                                         bestSentence = targetSentence.targetSentenceEntity
@@ -233,6 +243,34 @@ class Decoder():
         print " ".join(bestSentence)
         return
 
+    def addToAnswerSet(self, targetSentence):
+        """
+            add a TargetSentence instance to self.answers
+
+        """
+        self.answers.append(targetSentence)
+        return
+
+    def chooseBestAnswer(self):
+        """
+            return: the targetSentence with the highest score in self.answers
+
+            # must be used with decoder option saveToList=True
+
+            We can use a different model here to choose the best sentence. For
+            example, we could call the reranker here.
+
+        """
+        bestScore = -sys.maxint - 1
+        bestSentence = None
+        for sentence in self.answers:
+            score = sentence.totalScore(self.lm)
+            if bestScore < score:
+                bestScore = score
+                bestSentence = sentence
+
+        return bestSentence
+
 
 if __name__ == '__main__':
     optparser = optparse.OptionParser()
@@ -263,4 +301,9 @@ if __name__ == '__main__':
     for f in french:
         count += 1
         sys.stderr.write("Decoding sentence " + str(count) + " of " + str(len(french)) + "\n")
-        decoder.decode(f, maxPhraseLen=opts.p, maxStackSize=opts.s, maxTranslation=opts.k, verbose=opts.verbose)
+        decoder.decode(f,
+                       maxPhraseLen=opts.p,
+                       maxStackSize=opts.s,
+                       maxTranslation=opts.k,
+                       saveToList=False,
+                       verbose=opts.verbose)
