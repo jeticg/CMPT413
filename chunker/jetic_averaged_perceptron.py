@@ -3,7 +3,10 @@ import perc
 import sys
 import optparse
 import os
+import functools
+
 from include.feature_vector import FeatureVector
+from include.averaged_perceptron import Learner
 # from collections import defaultdict
 
 
@@ -24,106 +27,40 @@ def retrieve_feature(output, feat_list):
     return feat_vec
 
 
+def argmax(feat_vec, data, tagset, default_tag):
+    labeled_list, feat_list = data
+
+    local_output = perc.perc_test(feat_vec,
+                                  labeled_list,
+                                  feat_list,
+                                  tagset,
+                                  default_tag)
+
+    local_output.insert(0, 'B_-1')
+    local_output.append('B_+1')
+    return retrieve_feature(local_output, feat_list)
+
+
+def f_gold_vec(data):
+    labeled_list, feat_list = data
+
+    gold_output = []
+    gold_output.append('B_-1')
+    for i in labeled_list:
+        (w, t, label) = i.split()
+        gold_output.append(label)
+    gold_output.append('B_+1')
+
+    return retrieve_feature(gold_output, feat_list)
+
+
 def avg_perc_train(train_data, tagset, iterations=1):
-    feat_vec = FeatureVector()
-    feat_vec_sum = FeatureVector()
-    last_change_dict = FeatureVector()
-    total_sentence_count = 0
-    default_tag = tagset[0]
-    import random
-    for iteration in range(iterations):
-        # Number of Sentences
-
-        # stocastic gradient descent
-        batch_train_data = random.sample(train_data, 128)
-
-        sentence_total = len(batch_train_data)
-        sentence_count = 0
-
-        for (labeled_list, feat_list) in batch_train_data:
-            # For averaged perceptron, we need to know exactly how many
-            # sentences we have used during training
-            total_sentence_count += 1
-
-            # Print out information
-            sentence_count += 1
-            print "iteration", iteration, "sentence", sentence_count, "of", sentence_total
-
-            # Retrieve Gold Output
-            gold_output = []
-            gold_output.append('B_-1')
-            for i in labeled_list:
-                (w, t, label) = i.split()
-                gold_output.append(label)
-            gold_output.append('B_+1')
-
-            # Retrieve Local Output
-            local_output = perc.perc_test(feat_vec,
-                                          labeled_list,
-                                          feat_list,
-                                          tagset,
-                                          default_tag)
-            local_output.insert(0, 'B_-1')
-            local_output.append('B_+1')
-
-            print gold_output
-            print local_output
-
-            # Extract features from both outputs
-            local_vec = retrieve_feature(local_output, feat_list)
-            gold_vec  = retrieve_feature(gold_output, feat_list)
-
-            # Calculate delta
-            delta_vec = gold_vec - local_vec
-
-            # This is the key to averaged perceptron, it sums up all the
-            # feat_vec we have used, and returns the averaged value by
-            # dividing that sum with the total_sentence_count(total number
-            # of sentences used during training, including duplicates
-            # during multiple iterations)
-
-            #    feat_vec += delta_vec
-            #    feat_vec_sum += feat_vec
-
-            # The following is the optimisation for averaged perceptron
-            # which does exactly the same thing as the code in the above two
-            # lines. Instead of updating the feat_vec_sum everytime we train
-            # a new sentence, we do lazy update.
-            if sentence_count != sentence_total:
-                # Not the last sentence of current iteration
-                if not gold_vec == local_vec:
-                    for key in delta_vec:
-                        # Only update the changed values, and store when they
-                        # was last updated
-                        feat_vec_sum[key] += feat_vec[key] * (total_sentence_count - last_change_dict[key])
-                        last_change_dict[key] = total_sentence_count
-
-                    feat_vec += delta_vec
-                    # Because feat_vec is updated here by adding delta_vec, we
-                    # do exactly the same thing to feat_vec_sum, because it is
-                    # in its nature, a sum of feat_vecs
-                    feat_vec_sum += delta_vec
-            else:
-                # Is the last sentence of current iteration, we need to apply
-                # all pending updates to feat_vec_sum
-                for key in last_change_dict.keys() + feat_vec.keys():
-                    # Just to make sure we have indeed updated every key.
-                    feat_vec_sum[key] += feat_vec[key] * (total_sentence_count - last_change_dict[key])
-                    last_change_dict[key] = total_sentence_count
-
-                if not gold_vec == local_vec:
-                    # Last but not least, don't forget the current delta_vec
-                    feat_vec += delta_vec
-                    feat_vec_sum += delta_vec
-
-        # Dump every iteration
-        tmp = feat_vec_sum / total_sentence_count
-        tmp.dump("models/jetic_avg_Iter_" + str(iteration+1) + ".model")
-
-    # Finalisation, divide feat_vec_sum with total_sentence_count
-    feat_vec = feat_vec_sum / total_sentence_count
-
-    return feat_vec.export()
+    f_argmax = functools.partial(argmax, tagset=tagset, default_tag=tagset[0])
+    learner = Learner()
+    return learner.train(train_data,
+                         f_argmax=f_argmax,
+                         f_gold_vec=f_gold_vec,
+                         iterations=iterations)
 
 if __name__ == '__main__':
     optparser = optparse.OptionParser()
