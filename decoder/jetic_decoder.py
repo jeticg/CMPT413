@@ -33,15 +33,20 @@ class Decoder():
         stackSize = 1
         newStack = [{} for x in range(len(sentence) + 1)]
         minNewStack = [-sys.maxint for x in range(len(sentence) + 1)]
+
         for i in range(len(sentence)):
             if not verbose:
                 sys.stderr.write("processing the " + str(i + 1) + "th phrase of " + str(len(sentence)) + ", stack size: " + str(stackSize) + "\n")
             # adding the ith target word/phrase
+
+            # TODO: make program be able to choose discountinued word
             for j in range(len(sentence)):
                 # choose the jth source word as a start
                 for k in range(j + 1, min(len(sentence), j + maxPhraseLen) + 1):
                     # the phrase choosen to add this time is from j to k
                     sourcePhrase = sentence[j:k]
+
+                    
                     # Skip if the phrase doesn't exist
                     if sourcePhrase not in self.tm:
                         continue
@@ -116,6 +121,7 @@ class Decoder():
                     # only tmScore matters
                     stack[length].append((item[0], item[1][1]))
                     stackSize += 1
+
             newStack = [{} for x in range(len(sentence) + 1)]
             minNewStack = [-sys.maxint - 1 for x in range(len(sentence) + 1)]
 

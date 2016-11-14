@@ -4,6 +4,8 @@ import sys
 import models
 from collections import namedtuple
 
+import utilities
+
 optparser = optparse.OptionParser()
 optparser.add_option("-i", "--input", dest="input", default="data/input", help="File containing sentences to translate (default=data/input)")
 optparser.add_option("-t", "--translation-model", dest="tm", default="data/tm", help="File containing translation model (default=data/tm)")
@@ -23,6 +25,7 @@ for word in set(sum(french, ())):
     if (word,) not in tm:
         tm[(word,)] = [models.phrase(word, 0.0)]
 
+
 sys.stderr.write("Decoding %s...\n" % (opts.input,))
 for f in french:
     # The following code implements a monotone decoding
@@ -34,20 +37,28 @@ for f in french:
     initial_hypothesis = hypothesis(0.0, lm.begin(), None, None)
     stacks = [{} for _ in f] + [{}]
     stacks[0][lm.begin()] = initial_hypothesis
+
     for i, stack in enumerate(stacks[:-1]):
         for h in sorted(stack.itervalues(), key=lambda h: -h.logprob)[:opts.s]:  # prune
+
             for j in xrange(i+1, len(f)+1):
+
                 if f[i:j] in tm:
                     for phrase in tm[f[i:j]]:
                         logprob = h.logprob + phrase.logprob
                         lm_state = h.lm_state
+
                         for word in phrase.english.split():
                             (lm_state, word_logprob) = lm.score(lm_state, word)
                             logprob += word_logprob
                         logprob += lm.end(lm_state) if j == len(f) else 0.0
                         new_hypothesis = hypothesis(logprob, lm_state, h, phrase)
+
+
+                        # update stacks
                         if lm_state not in stacks[j] or stacks[j][lm_state].logprob < logprob:  # second case is recombination
                             stacks[j][lm_state] = new_hypothesis
+
     winner = max(stacks[-1].itervalues(), key=lambda h: h.logprob)
 
     def extract_english(h):
