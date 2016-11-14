@@ -30,7 +30,8 @@ class Decoder():
         stack[0][emptyTargetSentence.key()] = emptyTargetSentence.totalScore(self.lm), emptyTargetSentence.tmScore
 
         for stackLength in range(len(sentence) + 1):
-            # check if the phrase size is getting too big
+            sys.stderr.write('.' + str(len(stack[stackLength])))
+
             for targetSentenceKey in stack[stackLength]:
 
                 currentSentence = TargetSentence(key=targetSentenceKey,
@@ -71,10 +72,11 @@ class Decoder():
 
                                 # do pruning
                                 length = targetSentence.length()
-                                if len(stack[length]) == maxStackSize:
+                                if len(stack[length]) > maxStackSize:
                                     key = min(stack[length], key=lambda k: stack[length][k][0])
-                                    stack[length].pop('key', None)
+                                    stack[length].pop(key, None)
         # All words processed, we now have the best sentence stored in bestSentence
+        sys.stderr.write('\n')
         print " ".join(bestSentence)
         return
 
