@@ -2,12 +2,10 @@
 import optparse
 import sys
 import models
+from copy import deepcopy
 from collections import namedtuple
 
 from include.target_sentence import TargetSentence
-
-ngram_stats = namedtuple("ngram_stats", "logprob, backoff")
-phrase = namedtuple("phrase", "english, logprob")
 
 
 class Decoder():
@@ -28,15 +26,15 @@ class Decoder():
         bestScore = - sys.maxint - 1
         bestSentence = ()
         emptyTargetSentence = TargetSentence(length=len(sentence))
-        stack = [[] for x in range(len(sentence) + 1)]
-        stack[0].append((emptyTargetSentence.key(), emptyTargetSentence.tmScore))
+        stack = [{} for x in range(len(sentence) + 1)]
+        stack[0][emptyTargetSentence.key()] = emptyTargetSentence.totalScore(self.lm), emptyTargetSentence.tmScore
 
         for stackLength in range(len(sentence) + 1):
             # check if the phrase size is getting too big
-            for targetSentenceKey, targetSentenceScore in stack[stackLength]:
+            for targetSentenceKey in stack[stackLength]:
 
                 currentSentence = TargetSentence(key=targetSentenceKey,
-                                                tmScore=targetSentenceScore)
+                                                 tmScore=stack[stackLength][targetSentenceKey][1])
 
                 for j in range(len(sentence)):
                     # choose the jth source word as a start
@@ -52,9 +50,10 @@ class Decoder():
 
                         for targetPhrase in self.tm[sourcePhrase][:maxTranslation]:
                             # Add phrase to sentence
-                            targetSentence = deepcopy(currentSentence).addPhrase(j, k, targetPhrase)
+                            targetSentence = deepcopy(currentSentence)
+                            targetSentence.addPhrase(j, k, targetPhrase)
 
-                            # Compare with best score if translation complete, and skip adding to newStack
+                            # Compare with best score if translation complete, and skip adding to stack
                             if targetSentence.translationCompleted():
                                 if targetSentence.totalScore(self.lm) > bestScore:
                                     bestScore = targetSentence.totalScore(self.lm)
@@ -62,18 +61,19 @@ class Decoder():
                                 if saveToList:
                                     self.addToAnswerSet(targetSentence)
                             else:
-                                # Add the combined targetSentence to newStack if translation incomplete
-                                if targetSentence.key() in newStack[targetSentence.length()]:
-                                    if targetSentence.tmScore <= stack[targetSentence.length()][targetSentence.key()][1]:
+                                # Add the combined targetSentence to stack if translation incomplete
+                                length = targetSentence.length()
+                                key = targetSentence.key()
+                                if key in stack[length]:
+                                    if targetSentence.tmScore <= stack[length][key][1]:
                                         continue
                                 stack[length][key] = targetSentence.totalScore(self.lm), targetSentence.tmScore
 
                                 # do pruning
-                                sortedStack = sorted(stack[length].items(), key=lambda x: x[1], reverse=True)
-                                for item in sortedStack[:maxStackSize]:
-                                    # only tmScore matters
-                                    stack[length].append((item[0], item[1][1]))
-
+                                length = targetSentence.length()
+                                if len(stack[length]) == maxStackSize:
+                                    key = min(stack[length], key=lambda k: stack[length][k][0])
+                                    stack[length].pop('key', None)
         # All words processed, we now have the best sentence stored in bestSentence
         print " ".join(bestSentence)
         return
