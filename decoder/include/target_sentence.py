@@ -3,6 +3,7 @@ from copy import deepcopy
 
 import utilities
 
+
 class TargetSentence():
     def __init__(self,
                  length=0,
@@ -66,7 +67,6 @@ class TargetSentence():
         # update lastPos
         self.lastPos = phraseEndPosition - 1
         return
-        # raise NotImplemented
 
     def distance(self, endOfLast, startOfCurrent):
         # d(endOfLast, startOfcurrent) = alpha ^ (abs(startOfCurrent - endOfLast - 1))

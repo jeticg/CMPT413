@@ -6,7 +6,7 @@ from copy import deepcopy
 from collections import namedtuple
 
 
-import utilities
+from include.utilities import generate_by_mask
 from include.target_sentence import TargetSentence
 
 
@@ -39,71 +39,49 @@ class Decoder():
                 currentSentence = TargetSentence(key=targetSentenceKey,
                                                  tmScore=stack[stackLength][targetSentenceKey][1])
 
-                # print sentence
-
                 currentMask = list(targetSentenceKey[0])
-                # print
-                # print currentMask
-                # print list(sentence)
-                #
-                # for phrase, new_mask in utilities.generate_by_mask(sentence, currentMask, max_length=10):
-                #     # print 'hahah'
-                #     print phrase
 
-                # print 'step here'
+                for (sourcePhrase,
+                     new_mask,
+                     s_pos,
+                     e_pos) in generate_by_mask(sentence,
+                                                currentMask,
+                                                max_length=maxPhraseLen,
+                                                max_yield=50000):
 
-                '''
-                for j in range(len(sentence)):
-                    # choose the jth source word as a start
-                    for k in range(j + 1, min(len(sentence), j + maxPhraseLen) + 1):
+                    # Skip if the phrase doesn't exist
+                    if sourcePhrase not in self.tm:
+                        continue
 
-                        # for phrase, new_mask in utilities.generate_by_mask(sentence, mask, max_length=self.maxPhraseLen)
-                        # the phrase choosen to add this time is from j to k
-                        sourcePhrase = sentence[j:k]
-                '''
-                for j in range(1):
-                    for sourcePhrase, new_mask,  s_pos, e_pos in utilities.generate_by_mask(sentence, currentMask, max_length=maxPhraseLen, max_yield=50000):
+                    # print sourcePhrase
+                    for targetPhrase in self.tm[sourcePhrase][:maxTranslation]:
 
-                        # print sourcePhrase
+                        # Update mask, add phrase to sentence
+                        targetSentence = deepcopy(currentSentence)
+                        # targetSentence.addPhrase(j, k, targetPhrase)
+                        targetSentence.addPhraseByMask(s_pos, e_pos, new_mask, targetPhrase)
 
-                        # Skip if the phrase doesn't exist
-                        if sourcePhrase not in self.tm:
-                            continue
+                        # Compare with best score if translation complete, and skip adding to stack
+                        if targetSentence.translationCompleted():
+                            if targetSentence.totalScore(self.lm) > bestScore:
+                                bestScore = targetSentence.totalScore(self.lm)
+                                bestSentence = targetSentence.targetSentenceEntity
+                            if saveToList:
+                                self.addToAnswerSet(targetSentence)
+                        else:
+                            # Add the combined targetSentence to stack if translation incomplete
+                            length = targetSentence.length()
+                            key = targetSentence.key()
+                            if key in stack[length]:
+                                if targetSentence.tmScore <= stack[length][key][1]:
+                                    continue
+                            stack[length][key] = targetSentence.totalScore(self.lm), targetSentence.tmScore
 
-                        
-
-                        # print sourcePhrase
-                        for targetPhrase in self.tm[sourcePhrase][:maxTranslation]:
-                            # print targetPhrase
-
-                            # Update mask, add phrase to sentence
-                            targetSentence = deepcopy(currentSentence)
-                            # targetSentence.addPhrase(j, k, targetPhrase)
-                            targetSentence.addPhraseByMask(s_pos, e_pos, new_mask, targetPhrase)
-
-
-                            # Compare with best score if translation complete, and skip adding to stack
-                            if targetSentence.translationCompleted():
-                                if targetSentence.totalScore(self.lm) > bestScore:
-                                    bestScore = targetSentence.totalScore(self.lm)
-                                    bestSentence = targetSentence.targetSentenceEntity
-                                if saveToList:
-                                    self.addToAnswerSet(targetSentence)
-                            else:
-                                # Add the combined targetSentence to stack if translation incomplete
-                                length = targetSentence.length()
-                                key = targetSentence.key()
-                                if key in stack[length]:
-                                    if targetSentence.tmScore <= stack[length][key][1]:
-                                        continue
-                                stack[length][key] = targetSentence.totalScore(self.lm), targetSentence.tmScore
-
-                                # do pruning
-                                length = targetSentence.length()
-                                if len(stack[length]) > maxStackSize:
-                                    key = min(stack[length], key=lambda k: stack[length][k][0])
-                                    stack[length].pop(key, None)
-
+                            # do pruning
+                            length = targetSentence.length()
+                            if len(stack[length]) > maxStackSize:
+                                key = min(stack[length], key=lambda k: stack[length][k][0])
+                                stack[length].pop(key, None)
 
         # All words processed, we now have the best sentence stored in bestSentence
         sys.stderr.write('\n')
