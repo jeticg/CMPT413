@@ -1,6 +1,7 @@
 import itertools
 from copy import deepcopy
 
+
 def generate_by_mask(sentence, mask):
     '''
         An iterator to generate discountinued phrase from sentence by mask
@@ -15,7 +16,7 @@ def generate_by_mask(sentence, mask):
     '''
 
     assert (len(mask) == len(sentence)), "mask and sentence must have same length"
-    
+
     avaliable_index = [idx for idx, it in enumerate(mask) if it]
     for phrase_length in range(1, len(avaliable_index) + 1):
         for chosen_index in itertools.combinations(avaliable_index, phrase_length):
@@ -49,4 +50,4 @@ if __name__ == "__main__":
     mask = [True for _ in sentences]
     print words
     for phrase, mask in generate_by_mask(sentences, mask):
-       print phrase, mask
+        print phrase, mask

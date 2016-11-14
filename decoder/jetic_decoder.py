@@ -46,7 +46,6 @@ class Decoder():
                     # the phrase choosen to add this time is from j to k
                     sourcePhrase = sentence[j:k]
 
-                    
                     # Skip if the phrase doesn't exist
                     if sourcePhrase not in self.tm:
                         continue
