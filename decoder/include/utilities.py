@@ -2,7 +2,7 @@ import itertools
 from copy import deepcopy
 
 
-def generate_by_mask(sentence, mask, max_length=10, max_yield=1000):
+def generate_by_mask(sentence, mask, max_length=10):
     '''
         An iterator to generate discountinued phrase from sentence by mask
 
@@ -21,11 +21,9 @@ def generate_by_mask(sentence, mask, max_length=10, max_yield=1000):
     assert (len(mask) == len(sentence)), "mask and sentence must have same length"
 
     avaliable_index = [idx for idx, it in enumerate(mask) if it == 0]
-    count = 0
+
     for phrase_length in range(1, min(len(avaliable_index), max_length) + 1):
         for chosen_index in itertools.combinations(avaliable_index, phrase_length):
-            start_pos = min(chosen_index)
-            end_pos = max(chosen_index)
             new_mask = deepcopy(mask)
             phrase = []
 
@@ -33,10 +31,8 @@ def generate_by_mask(sentence, mask, max_length=10, max_yield=1000):
                 phrase.append(sentence[idx])
                 new_mask[idx] = 1
 
-            yield tuple(phrase), tuple(new_mask), start_pos, end_pos
-            count += 1
-            if count > max_yield:
-                return
+            yield tuple(phrase), tuple(new_mask)
+
 
 if __name__ == "__main__":
     '''

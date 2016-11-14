@@ -1,6 +1,7 @@
 from math import log10
 from copy import deepcopy
 
+import utilities
 
 class TargetSentence():
     def __init__(self,
@@ -53,8 +54,19 @@ class TargetSentence():
         self.lastPos = phraseEndPosition - 1
         return
 
-    def addPhraseByMask(self, phraseMask, targetPhrase):
-        raise NotImplemented
+    def addPhraseByMask(self, phraseStartPosition, phraseEndPosition, phraseMask, targetPhrase):
+        '''
+
+        '''
+        self.sourceMark = phraseMask
+        # add target phrase to sentence
+        self.targetSentenceEntity = self.targetSentenceEntity + tuple(targetPhrase.english.split())
+        # update translation score
+        self.tmScore += targetPhrase.logprob + self.distance(self.lastPos, phraseStartPosition)
+        # update lastPos
+        self.lastPos = phraseEndPosition - 1
+        return
+        # raise NotImplemented
 
     def distance(self, endOfLast, startOfCurrent):
         # d(endOfLast, startOfcurrent) = alpha ^ (abs(startOfCurrent - endOfLast - 1))
