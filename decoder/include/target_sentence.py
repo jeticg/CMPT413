@@ -53,6 +53,9 @@ class TargetSentence():
         self.lastPos = phraseEndPosition - 1
         return
 
+    def addPhraseByMask(self, phraseMask, targetPhrase):
+        raise NotImplemented
+
     def distance(self, endOfLast, startOfCurrent):
         # d(endOfLast, startOfcurrent) = alpha ^ (abs(startOfCurrent - endOfLast - 1))
         # since all the scores are logd, assume beta = log10(alpha)
