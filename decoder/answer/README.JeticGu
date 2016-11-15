@@ -1,0 +1,5 @@
+Mr Jetic Gu implemented our first version of decoder(jetic_decoder.py) and made
+a lot of optimisations.
+
+He also implemented the naive version, which is our version 2 decoder
+(jetic_decoder_2.py)
