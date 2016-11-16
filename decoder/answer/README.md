@@ -42,12 +42,12 @@ For example, (here I use English as source sentence, because I don't know French
 
 The algorithm is like 
 
-	for I in range(len(sentence))
+	for each stack
+		prune stacks
 		choose anyFrenchPhrase that does not overlap with translated words
 			combine anyFrenchPhrase with all sentences in stack, 
 			if combinedSentence is translation complete(all French words translated):
 				add combinedSentence to answerSet
-		prune stacks
 	
 	print the sentence with highest score in answerSet
 	
