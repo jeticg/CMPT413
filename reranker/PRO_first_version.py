@@ -46,11 +46,11 @@ for n, line in enumerate(open(opts.nbest)):
     nbests[i].append((translation_candidate(sentence, inverse_scores, features), smoothed_score))
 
     if n % 2000 == 0:
-        print('loaded %d lines' % n)
+        sys.stderr.write(".")
 
     # small size for testing, delete it when release
-    if n > 4000:
-        break
+    # if n > 4000:
+    #     break
 
 
 # In[151]:
