@@ -42,7 +42,7 @@ class TargetSentence():
         if sum(self.sourceMark[phraseStartPosition:phraseEndPosition]) == 0:
             return False
         return True
-
+        
     def addPhrase(self, phraseStartPosition, phraseEndPosition, targetPhrase):
         # mark positions in sourceMark as translated
         for i in range(phraseStartPosition, phraseEndPosition):
