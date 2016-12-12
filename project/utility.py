@@ -1,4 +1,4 @@
-def get_lines(fp, k_line=5, verbose=False, preprocess=lambda x:x):
+def get_lines(fp, k_line=5, verbose=False, preprocess=lambda x: x):
     '''
     Input
         fp: file name
