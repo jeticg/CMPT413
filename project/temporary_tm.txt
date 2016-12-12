@@ -98,3 +98,903 @@
 ! ||| . he ||| -8.45297503409
 ! ||| . hong kong is ||| -4.72738753871
 ! ||| . hong kong ||| -7.04838609872
+! ||| . hong ||| -5.53338927873
+! ||| . however ||| -9.2518657388
+! ||| . i am sure ||| -5.1416641065
+! ||| . i am ||| -7.03966056586
+! ||| . i ||| -9.72883700955
+! ||| . it will ||| -6.80461222007
+! ||| . it ||| -9.48402486918
+! ||| . see you soon ! ||| 0.0
+! ||| . therefore ||| -8.25140402938
+! ||| . they should pay ||| 0.0
+! ||| . they should ||| -6.08222111038
+! ||| . they ||| -9.07566962866
+! ||| . while it is not viable to ||| 0.0
+! ||| . while it is not viable ||| 0.0
+! ||| . while it is not ||| -0.69314718056
+! ||| . while it is ||| -2.30258509299
+! ||| . while it ||| -2.7080497011
+! ||| . while ||| -6.53378771793
+! ||| . why ? ||| -5.31812015384
+! ||| . ||| -7.2967468244
+! ||| . ’ ||| -2.83321384406
+! ||| 1993-94 . ||| -0.69314718056
+! ||| 1999 ! ||| 0.0
+! ||| 20 seats to 24 seats in 2000 ||| 0.0
+! ||| 20 seats to 24 seats in ||| 0.0
+! ||| 20 seats to 24 seats ||| 0.0
+! ||| 20 seats to 24 ||| 0.0
+! ||| 20 seats to ||| 0.0
+! ||| : &quot; ||| -8.91206708497
+! ||| ? ! ||| -1.09861328867
+! ||| ? this is ||| -3.78418843392
+! ||| ? this ||| -4.53259839315
+! ||| ? ||| -7.03568524607
+! ||| a corner . ||| -2.56494905746
+! ||| a fearful thing ! ||| 0.0
+! ||| a great margin ! ||| 0.0
+! ||| a lot . ||| -4.3040660932
+! ||| a move away from the &quot; ||| -0.69314718056
+! ||| a time . ||| -3.52635932462
+! ||| a tragic irony ! ||| 0.0
+! ||| a whole . ||| -5.23644176283
+! ||| a whole bunch of them ! ||| 0.0
+! ||| a ||| -12.423067638
+! ||| able to progress gradually . ||| 0.0
+! ||| about . ||| -5.64544658764
+! ||| about this . ||| -4.35670982669
+! ||| about ||| -10.5975351383
+! ||| above ! ||| -0.69314718056
+! ||| abuse . ||| -5.39816201152
+! ||| acceptable . ||| -6.0799329851
+! ||| accomplish the task . ||| 0.0
+! ||| action ! ||| -0.69314718056
+! ||| action . ||| -6.77878175769
+! ||| activities . ||| -8.23536195175
+! ||| advantage ! ||| 0.0
+! ||| affairs ! ||| 0.0
+! ||| africa . ||| -1.50407839678
+! ||| afternoon ! ||| 0.0
+! ||| ahead . ||| -5.41164509186
+! ||| all ! ||| -0.20067047324
+! ||| all . ||| -7.00078984995
+! ||| all about . ||| -4.86753415046
+! ||| all their lives . ||| -2.07944154168
+! ||| also ! ||| 0.0
+! ||| also brazen ||| 0.0
+! ||| altogether ! ||| -0.69314718056
+! ||| an eye . ||| -1.60943791243
+! ||| and be counted ! ||| 0.0
+! ||| and carrying them around . ||| -0.69314718056
+! ||| and charges . ||| -4.38202663467
+! ||| and defended ! ||| 0.0
+! ||| and developing their potentials ! ||| 0.0
+! ||| and fee increases . ||| -1.09861328867
+! ||| and omissions ! ||| 0.0
+! ||| and see . ||| -2.3978951728
+! ||| and stay healthy ! ||| -1.60943791243
+! ||| and understood everything . ||| 0.0
+! ||| and vietnam . ||| -3.295837866
+! ||| and weak , ||| -3.04452343772
+! ||| and will pass muster . ||| -0.69314718056
+! ||| and would ||| -7.1236725032
+! ||| and ||| -14.1216186856
+! ||| anticipate ||| -5.62040042572
+! ||| any free lunch ! ||| 0.0
+! ||| any good either ! ||| -0.69314718056
+! ||| any problem by then . ||| 0.0
+! ||| any responsibility . ||| -1.60943791243
+! ||| any sense of direction . ||| 0.0
+! ||| anymore ! ||| -1.09861328867
+! ||| anyway , ||| -5.66642599811
+! ||| apartment lodgers ! ||| 0.0
+! ||| appeals all their lives . ||| -1.94591114906
+! ||| applications . ||| -6.18208282672
+! ||| are ? ||| -4.60517018599
+! ||| are also ! ||| 0.0
+! ||| are gone . ||| -2.07944154168
+! ||| are hardly acceptable . ||| -0.69314718056
+! ||| are to be ||| -7.2506358049
+! ||| are to ||| -7.1260866773
+! ||| areas . ||| -6.8700549518
+! ||| around . ||| -4.8751970332
+! ||| around me . ||| 0.0
+! ||| around the world ! ||| 0.0
+! ||| as a whole . ||| -4.66343933411
+! ||| as possible ! ||| 0.0
+! ||| as soon as possible ! ||| 0.0
+! ||| as well ! ||| -0.980829253012
+! ||| association , and ||| -3.63758575973
+! ||| association , ||| -6.47389061635
+! ||| at ! ||| 0.0
+! ||| at a time . ||| -2.56494905746
+! ||| at all ! ||| -0.182321956794
+! ||| at all . ||| -7.2122946405
+! ||| at once . ||| -2.94443857917
+! ||| at that time ! ||| 0.0
+! ||| at that time . ||| -5.51745395647
+! ||| at this time . ||| -3.93182783273
+! ||| atmosphere . ||| -4.21950650518
+! ||| attentive to the last detail ! ||| 0.0
+! ||| available . ||| -6.74993135379
+! ||| award competition . ||| -1.50407839678
+! ||| away , okay ? ||| 0.0
+! ||| away from the &quot; ||| -0.69314718056
+! ||| back ! ||| -1.60943791243
+! ||| barely justified . ||| 0.0
+! ||| basic law . ||| -6.47389061635
+! ||| be ! ||| 0.0
+! ||| be . ||| -6.32793918373
+! ||| be able to progress gradually . ||| 0.0
+! ||| be any problem by then . ||| 0.0
+! ||| be available . ||| -2.77258872224
+! ||| be barely justified . ||| 0.0
+! ||| be blamed ! ||| 0.0
+! ||| be counted ! ||| 0.0
+! ||| be it . ||| -2.7080497011
+! ||| be the case . ||| -3.80666348977
+! ||| be the key factor ! ||| -1.38629436112
+! ||| be tossed ! ||| 0.0
+! ||| beaten path ! ||| 0.0
+! ||| because he or she is poor ! ||| 0.0
+! ||| becomes more open , ||| -1.79175746923
+! ||| been . ||| -4.07753464391
+! ||| been counted on the east . ||| 0.0
+! ||| been heard this time . why ? ||| 0.0
+! ||| been suffering ! ||| 0.0
+! ||| beginning ! ||| 0.0
+! ||| behaviour ! ||| 0.0
+! ||| best . ||| -4.5538783916
+! ||| betrayed in the deepest consequences . ||| 0.0
+! ||| better ! ||| -1.09861328867
+! ||| better . ||| -6.10924858276
+! ||| bill . ||| -7.35436274542
+! ||| bind me , ||| 0.0
+! ||| bit . as ||| -3.09104345336
+! ||| bit . ||| -3.98898504656
+! ||| blamed ! ||| 0.0
+! ||| board . ||| -6.45990140438
+! ||| books ! ||| 0.0
+! ||| both sides of the road ! the ||| 0.0
+! ||| both sides of the road ! ||| 0.0
+! ||| bottom &quot; ! ||| 0.0
+! ||| brazen ||| -1.79175746923
+! ||| breached standing orders . ||| 0.0
+! ||| break up ! ||| -1.38629436112
+! ||| bright one ! ||| -0.69314718056
+! ||| broadcast . ||| -4.14313572639
+! ||| building ! ||| 0.0
+! ||| bunch of them ! ||| 0.0
+! ||| burden . ||| -5.95842443303
+! ||| business ! ||| -1.09861328867
+! ||| business success . ||| 0.0
+! ||| but no action . ||| -1.60943791243
+! ||| by . ||| -4.67282930446
+! ||| by day ! ||| 0.0
+! ||| by public security ! &quot; ||| 0.0
+! ||| by public security ! ||| 0.0
+! ||| by such a great margin ! ||| 0.0
+! ||| by then . ||| -3.63758575973
+! ||| can be barely justified . ||| 0.0
+! ||| can follow suit ? ||| 0.0
+! ||| can make . ||| 0.0
+! ||| can we ? ||| -1.38629436112
+! ||| cantonese . ||| -3.95124211858
+! ||| care . ||| -7.4211776046
+! ||| carried away , okay ? ||| 0.0
+! ||| carrying them around . ||| -0.69314718056
+! ||| case . ||| -7.18992192275
+! ||| case is ! ||| 0.0
+! ||| central government ! ||| 0.0
+! ||| chamber ! ||| -0.69314718056
+! ||| changes anyway , ||| -1.09861328867
+! ||| channels there are also ! ||| 0.0
+! ||| charge of re-entry work . ||| -0.69314718056
+! ||| charges . ||| -6.45046968214
+! ||| china . ||| -7.16857992926
+! ||| china and vietnam . ||| -1.38629436112
+! ||| cigarettes . ||| -3.91202300543
+! ||| clear conscience . ||| -1.79175746923
+! ||| clock tower in tsim sha tsui . ||| -1.09861328867
+! ||| come ! ||| -1.09861328867
+! ||| come . ||| -5.65948237576
+! ||| coming of the new year . ||| -1.79175746923
+! ||| competition . ||| -5.83041429559
+! ||| completely ! ||| -0.69314718056
+! ||| concern . ||| -6.45833708335
+! ||| concerned . ||| -6.42080849901
+! ||| conscience . ||| -4.02535409074
+! ||| consequences . ||| -5.598422959
+! ||| considered satisfactory . ||| -1.79175746923
+! ||| contrary ! ||| 0.0
+! ||| control points not implemented . ||| -0.69314718056
+! ||| core . ||| -3.13549331593
+! ||| corner . ||| -3.91202300543
+! ||| counted ! ||| 0.0
+! ||| counted on the east . ||| 0.0
+! ||| country ! ||| 0.0
+! ||| course to take . ||| -1.38629436112
+! ||| court . ||| -6.16541801423
+! ||| cut . ||| -4.00733418523
+! ||| damage &quot; ! ||| 0.0
+! ||| day ! ||| -1.38629436112
+! ||| day long ! ||| -0.69314718056
+! ||| deal ! ||| -1.79175746923
+! ||| deal . ||| -4.74493237836
+! ||| debate . ||| -6.85329550319
+! ||| deceive people ! ||| 0.0
+! ||| decision . ||| -6.91770561984
+! ||| deepest consequences . ||| 0.0
+! ||| defect . ||| -2.83321384406
+! ||| defended ! ||| 0.0
+! ||| definition are hardly acceptable . ||| 0.0
+! ||| delay ! ||| -1.09861328867
+! ||| democracy ? ||| -3.98898504656
+! ||| detail ! ||| 0.0
+! ||| detriment ! ||| 0.0
+! ||| developing their potentials ! ||| 0.0
+! ||| did . ||| -4.62497297328
+! ||| died . ||| -4.57470887851
+! ||| direction . ||| -6.27287830655
+! ||| disapproval . ||| -2.07944154168
+! ||| division . ||| -6.29341864885
+! ||| do any good either ! ||| -0.69314718056
+! ||| do so ! ||| -0.69314718056
+! ||| do so . ||| -7.33693640171
+! ||| does . ||| -4.46590401866
+! ||| done ! ||| -1.09861328867
+! ||| drug abuse . ||| -3.43398610449
+! ||| each model . ||| 0.0
+! ||| earlier ! ||| 0.0
+! ||| east . ||| -5.04342556692
+! ||| effect at all ! ||| 0.0
+! ||| effects for ||| -1.79175746923
+! ||| effects ||| -8.18200034429
+! ||| either ! ||| -0.69314718056
+! ||| else ! ||| -1.09861328867
+! ||| enough ! ||| 0.0
+! ||| enough . ||| -5.95064127259
+! ||| enough then ! ||| 0.0
+! ||| entertainment for ourselves ! it ||| 0.0
+! ||| entertainment for ourselves ! ||| 0.0
+! ||| environment ! ||| -0.69314718056
+! ||| event ! ||| 0.0
+! ||| everybody ! ||| -1.09861328867
+! ||| everyday thinking . ||| 0.0
+! ||| everyone ! ||| -0.980829253012
+! ||| everyone . ||| -4.7957908856
+! ||| everything . ||| -4.52178537705
+! ||| excitement . ||| -2.7080497011
+! ||| exhibition . ||| -4.62497297328
+! ||| expected . ||| -4.52178537705
+! ||| eye . ||| -3.71357386671
+! ||| face of the long wait . ||| -0.69314718056
+! ||| fact ? ||| -2.30258509299
+! ||| factor ! ||| -1.38629436112
+! ||| fall . ||| -4.38202663467
+! ||| fallacy for ||| -0.69314718056
+! ||| fallacy ||| -4.24849624205
+! ||| far . ||| -4.84418654646
+! ||| fare and fee increases . ||| -0.69314718056
+! ||| fare rise applications . ||| -1.09861328867
+! ||| fearful thing ! ||| 0.0
+! ||| fee increases . ||| -3.66356264613
+! ||| fengxin . ||| 0.0
+! ||| findings . ||| -4.40672104727
+! ||| first place ? ||| -2.77258872224
+! ||| fixed . ||| -3.68887945411
+! ||| folks to try to do so ! ||| 0.0
+! ||| follow suit ? ||| -2.56494905746
+! ||| following the old beaten path ! ||| 0.0
+! ||| for ! ||| 0.0
+! ||| for definition are hardly acceptable . ||| 0.0
+! ||| for him ! ||| 0.0
+! ||| for ourselves ! it ||| 0.0
+! ||| for ourselves ! ||| 0.0
+! ||| for people ! ||| 0.0
+! ||| for sports ! ||| 0.0
+! ||| for survival . ||| -3.17805303035
+! ||| for the best . ||| -1.94591114906
+! ||| for themselves ! ||| 0.0
+! ||| for ||| -10.5454740475
+! ||| force ! ||| 0.0
+! ||| foreign labour . ||| -3.76120071569
+! ||| former ! ||| 0.0
+! ||| forth . ||| -4.02535409074
+! ||| free hand to report ||| -1.09861328867
+! ||| free hand to ||| -3.76120071569
+! ||| free lunch ! ||| 0.0
+! ||| from above ! ||| -0.69314718056
+! ||| from all ! ||| 0.0
+! ||| from it ! ||| 0.0
+! ||| from now on ! ||| 0.0
+! ||| from other people ! ||| 0.0
+! ||| from the &quot; ||| -4.45434789625
+! ||| from the beginning ! ||| 0.0
+! ||| from the government so far . ||| 0.0
+! ||| from this defect . ||| 0.0
+! ||| full play ! ||| 0.0
+! ||| function . ||| -5.08759625523
+! ||| further &quot; damage &quot; ! ||| 0.0
+! ||| future business success . ||| 0.0
+! ||| get carried away , okay ? ||| 0.0
+! ||| get new people . ||| -0.69314718056
+! ||| getting better ! ||| 0.0
+! ||| go very far . ||| -1.38629436112
+! ||| go ||| -8.37839258054
+! ||| gone . ||| -4.45434789625
+! ||| gone off the rails ! ||| -1.60943791243
+! ||| good either ! ||| -0.69314718056
+! ||| government ! ||| -0.69314718056
+! ||| government is . ||| -1.38629436112
+! ||| government so far . ||| -0.69314718056
+! ||| gradually . ||| -3.09104345336
+! ||| great deal . ||| -2.7080497011
+! ||| great margin ! ||| 0.0
+! ||| gross fallacy for ||| 0.0
+! ||| gross fallacy ||| 0.0
+! ||| ground ! ||| 0.0
+! ||| groups . ||| -5.5947119496
+! ||| hand ! ||| -1.09861328867
+! ||| hand to report ||| -1.09861328867
+! ||| hand to ||| -5.78689890137
+! ||| hard ! ||| 0.0
+! ||| hardly acceptable . ||| -2.30258509299
+! ||| have ! ||| -0.69314718056
+! ||| have been . ||| -3.04452343772
+! ||| have been counted on the east . ||| 0.0
+! ||| have been suffering ! ||| 0.0
+! ||| have breached standing orders . ||| 0.0
+! ||| have moved in ! ||| 0.0
+! ||| have stayed on ! ||| 0.0
+! ||| having military rule . ||| 0.0
+! ||| he or she is poor ! ||| 0.0
+! ||| healthy ! ||| -1.60943791243
+! ||| hear her say that . ||| 0.0
+! ||| heard this time . why ? ||| 0.0
+! ||| hell ! &quot; ||| 0.0
+! ||| hell ! ||| 0.0
+! ||| hello , fengxin . ||| -0.69314718056
+! ||| help ! ||| -1.79175746923
+! ||| her . ||| -4.67749037257
+! ||| her say that . ||| 0.0
+! ||| here i come . ||| 0.0
+! ||| him ! ||| -1.2527639685
+! ||| history ! ||| -0.69314718056
+! ||| ho . ||| -3.55534906149
+! ||| home ! ||| -1.60943791243
+! ||| home town ! ||| 0.0
+! ||| hong kong ! &#93; ||| 0.0
+! ||| hong kong ! ||| -1.54044370761
+! ||| hong kong &apos;s history ! ||| 0.0
+! ||| hong kong . ||| -7.67415295328
+! ||| housing . ||| -6.34913999138
+! ||| humanitarianism . ||| -2.83321384406
+! ||| i come . ||| 0.0
+! ||| i have breached standing orders . ||| 0.0
+! ||| i must ||| -7.96380820323
+! ||| i ||| -11.9383137276
+! ||| if enough . ||| -1.60943791243
+! ||| imagined . ||| -2.56494905746
+! ||| implemented . ||| -6.05912259558
+! ||| import it ! ||| 0.0
+! ||| imprisonment ? ||| -2.07944154168
+! ||| in ! ||| 0.0
+! ||| in . ||| -5.79909365446
+! ||| in excitement . ||| 0.0
+! ||| in nature . ||| -5.17048367504
+! ||| in real terms ! ||| 0.0
+! ||| in the deepest consequences . ||| 0.0
+! ||| in the first place ? ||| -2.07944154168
+! ||| in the years to come ! ||| 0.0
+! ||| in their writings ! ||| 0.0
+! ||| in tsim sha tsui . ||| -1.79175746923
+! ||| in value ! ||| 0.0
+! ||| increases . ||| -5.20400586708
+! ||| indeed attentive to the last detail ! ||| 0.0
+! ||| intense suffering . ||| -0.69314718056
+! ||| interest ! ||| -1.60943791243
+! ||| interpret ! ||| -1.09861328867
+! ||| into full play ! ||| 0.0
+! ||| irony ! ||| -1.09861328867
+! ||| is ! ||| -1.20397280433
+! ||| is . ||| -5.95583874947
+! ||| is a fearful thing ! ||| 0.0
+! ||| is all about . ||| -4.18965574203
+! ||| is also brazen ||| 0.0
+! ||| is building ! ||| 0.0
+! ||| is concerned . ||| -5.18738619584
+! ||| is fixed . ||| -0.69314718056
+! ||| is more ||| -7.6643471791
+! ||| is poor ! ||| 0.0
+! ||| is really a tragic irony ! ||| 0.0
+! ||| is there ? ||| -2.07944154168
+! ||| issue . ||| -7.48493084129
+! ||| issues ! ||| 0.0
+! ||| it ! ||| -1.5293936663
+! ||| it . he ||| -2.94443857917
+! ||| it . ||| -7.42922400685
+! ||| it is ! ||| -1.79175746923
+! ||| it is also brazen ||| 0.0
+! ||| japan ! ||| 0.0
+! ||| jobs . ||| -6.52942158827
+! ||| justified . ||| -5.14749507681
+! ||| key factor ! ||| -1.38629436112
+! ||| kong ! &#93; ||| 0.0
+! ||| kong ! ||| -0.69314718056
+! ||| kong &apos;s history ! ||| 0.0
+! ||| kong . ||| -7.12929761293
+! ||| labour . ||| -5.54517744448
+! ||| labour force ! ||| 0.0
+! ||| landscape . ||| -3.58351813846
+! ||| last detail ! ||| 0.0
+! ||| law ! ||| -1.09861328867
+! ||| law . ||| -7.78986924705
+! ||| leading the world . ||| -0.69314718056
+! ||| learn of it ! ||| 0.0
+! ||| learned ! ||| 0.0
+! ||| legal proceedings . ||| -4.09434256222
+! ||| limit ! ||| -1.09861328867
+! ||| lined both sides of the road ! ||| 0.0
+! ||| lives . ||| -5.27811481923
+! ||| lodgers ! ||| 0.0
+! ||| long ! ||| -1.09861328867
+! ||| long wait . ||| -1.94591114906
+! ||| lot . ||| -4.60517018599
+! ||| lunch ! ||| 0.0
+! ||| magicians . ||| -0.405464608108
+! ||| main points made by mr ||| 0.0
+! ||| main points made by ||| 0.0
+! ||| main points made ||| 0.0
+! ||| main points ||| -5.29831736655
+! ||| major , ||| -3.4657359028
+! ||| make . ||| -4.83628164695
+! ||| make changes anyway , ||| -1.09861328867
+! ||| making . ||| -3.89181849811
+! ||| malpractice . ||| -3.58351813846
+! ||| many ! ||| -1.38629436112
+! ||| margin ! ||| 0.0
+! ||| marks ! ||| -0.69314718056
+! ||| matter ! ||| 0.0
+! ||| matters . ||| -6.64118448974
+! ||| me , ||| -6.82328546236
+! ||| me . ||| -6.43615292837
+! ||| me ||| -9.66959873889
+! ||| merely following the old beaten path ! ||| 0.0
+! ||| middle of the night ! ||| 0.0
+! ||| military rule . ||| 0.0
+! ||| millennium ! ||| 0.0
+! ||| mind ! ||| 0.0
+! ||| miracle ! ||| 0.0
+! ||| miss ! ||| -1.38629436112
+! ||| model . ||| -4.44265175649
+! ||| moment . ||| -5.6058022263
+! ||| momentum is building ! ||| 0.0
+! ||| month . ||| -6.51025514053
+! ||| more ! ||| -1.94591114906
+! ||| more open , ||| -3.80666348977
+! ||| more ||| -11.0560957317
+! ||| mouse ! ||| 0.0
+! ||| move away from the &quot; ||| -0.69314718056
+! ||| moved in ! ||| 0.0
+! ||| muster . ||| -1.09861328867
+! ||| my disapproval . ||| -1.09861328867
+! ||| my major , ||| 0.0
+! ||| my sentence ! ||| -1.09861328867
+! ||| nature . ||| -5.48479635349
+! ||| need . ||| -5.9763513293
+! ||| negative . ||| -4.66343933411
+! ||| nervous ||| -4.65396030016
+! ||| new people . ||| -0.69314718056
+! ||| new year . ||| -3.72167127694
+! ||| night ! ||| 0.0
+! ||| no action . ||| -2.30258509299
+! ||| no turning back ! ||| -1.38629436112
+! ||| none at all . ||| -2.48490704979
+! ||| normal function . ||| -1.60943791243
+! ||| north . ||| -4.47734001448
+! ||| not . ||| -6.79121746273
+! ||| not do any good either ! ||| -0.69314718056
+! ||| not implemented . ||| -1.79175746923
+! ||| now on ! ||| 0.0
+! ||| numerous ! ||| 0.0
+! ||| o to increase the ||| 0.0
+! ||| o to increase ||| 0.0
+! ||| o to ||| -3.68887945411
+! ||| o ||| -8.10651502826
+! ||| of activities . ||| -3.21887582487
+! ||| of an eye . ||| -1.60943791243
+! ||| of any responsibility . ||| 0.0
+! ||| of behaviour ! ||| 0.0
+! ||| of business ! ||| -0.69314718056
+! ||| of direction . ||| -2.30258509299
+! ||| of hong kong ! ||| -1.09861328867
+! ||| of hong kong . ||| -6.20354947107
+! ||| of it ! ||| 0.0
+! ||| of it . ||| -5.9763513293
+! ||| of office ! ||| 0.0
+! ||| of re-entry work . ||| -0.69314718056
+! ||| of sectors . ||| -0.69314718056
+! ||| of the board . ||| -3.52635932462
+! ||| of the former ! ||| 0.0
+! ||| of the long wait . ||| -0.69314718056
+! ||| of the main points made by mr ||| 0.0
+! ||| of the main points made by ||| 0.0
+! ||| of the main points made ||| 0.0
+! ||| of the main points ||| -2.30258509299
+! ||| of the new year . ||| -2.19722557734
+! ||| of the night ! ||| 0.0
+! ||| of the people ! ||| -1.09861328867
+! ||| of the road ! the crowd lined ||| 0.0
+! ||| of the road ! the crowd ||| 0.0
+! ||| of the road ! the ||| 0.0
+! ||| of the road ! ||| 0.0
+! ||| of the way . ||| -2.48490704979
+! ||| of them ! ||| 0.0
+! ||| of things . ||| -3.33220411018
+! ||| of this . ||| -5.08759625523
+! ||| of those around me . ||| 0.0
+! ||| of your country ! ||| 0.0
+! ||| of your home town ! ||| 0.0
+! ||| off the rails ! ||| -1.60943791243
+! ||| office ! ||| -0.69314718056
+! ||| office . ||| -6.54822242277
+! ||| okay ? ||| -2.07944154168
+! ||| old beaten path ! ||| 0.0
+! ||| ombudsman ||| -6.58478811239
+! ||| omissions ! ||| 0.0
+! ||| on ! ||| -0.405464608108
+! ||| on . ||| -7.14755934919
+! ||| on legal proceedings . ||| -0.69314718056
+! ||| on the east . ||| 0.0
+! ||| on the other . ||| -6.15909770849
+! ||| on their jobs . ||| -1.09861328867
+! ||| once . ||| -4.49981067033
+! ||| one ! ||| -1.60943791243
+! ||| one &apos;s bottom &quot; ! ||| 0.0
+! ||| one . ||| -7.20266071052
+! ||| one ||| -10.9678549485
+! ||| only ! ||| -0.69314718056
+! ||| open , ||| -6.10702355774
+! ||| or having military rule . ||| 0.0
+! ||| or not . ||| -6.070737218
+! ||| or she is poor ! ||| 0.0
+! ||| orders . ||| -4.94875969038
+! ||| other . ||| -6.41673040251
+! ||| other channels there are also ! ||| 0.0
+! ||| other people ! ||| 0.0
+! ||| other people . ||| -4.29046164115
+! ||| our labour force ! ||| 0.0
+! ||| ourselves ! it ||| 0.0
+! ||| ourselves ! ||| -0.69314718056
+! ||| out ! ||| -2.07944154168
+! ||| over limit ! ||| -1.09861328867
+! ||| owners . ||| -5.13579893705
+! ||| papers . ||| -4.2341033046
+! ||| party . ||| -5.69709488651
+! ||| pass muster . ||| -0.69314718056
+! ||| path ! ||| 0.0
+! ||| pay the rich . ||| 0.0
+! ||| pc ho . ||| -0.69314718056
+! ||| people ! ||| -0.619038351264
+! ||| people . ||| -6.98610392239
+! ||| performances ||| -7.33628535002
+! ||| place ? ||| -4.14313572639
+! ||| play ! ||| 0.0
+! ||| played ! ||| 0.0
+! ||| plough ! ||| -0.69314718056
+! ||| points made by mr ||| 0.0
+! ||| points made by ||| -3.58351813846
+! ||| points made ||| -4.31749061354
+! ||| points not implemented . ||| -0.69314718056
+! ||| points ||| -8.91368616973
+! ||| policy . ||| -7.43248376792
+! ||| political party . ||| -3.68887945411
+! ||| poor ! ||| -0.69314718056
+! ||| poor . ||| -5.82894441761
+! ||| position can be barely justified . ||| 0.0
+! ||| possible ! ||| -0.69314718056
+! ||| potentials ! ||| 0.0
+! ||| problem by then . ||| 0.0
+! ||| proceedings . ||| -5.57215439218
+! ||| programmes . ||| -6.74993135379
+! ||| progress gradually . ||| -0.69314718056
+! ||| property owners . ||| -3.04452343772
+! ||| provide entertainment for ourselves ! it ||| 0.0
+! ||| provide entertainment for ourselves ! ||| 0.0
+! ||| public . ||| -7.34794382815
+! ||| public security ! &quot; ||| 0.0
+! ||| public security ! ||| 0.0
+! ||| put a ||| -5.24702367216
+! ||| qu ||| -2.77258872224
+! ||| rails ! ||| -1.60943791243
+! ||| railway will be the key factor ! ||| -1.38629436112
+! ||| re-entry work . ||| -0.69314718056
+! ||| readily disposed of . during the recent ||| 0.0
+! ||| readily disposed of . during the ||| 0.0
+! ||| readily disposed of . during ||| 0.0
+! ||| readily disposed of . ||| 0.0
+! ||| readily disposed of ||| 0.0
+! ||| readily disposed ||| 0.0
+! ||| readily ||| -6.93828459202
+! ||| real terms ! ||| 0.0
+! ||| really a tragic irony ! ||| 0.0
+! ||| rectified ! ||| -0.69314718056
+! ||| reluctant and weak , ||| -3.04452343772
+! ||| rely on . ||| -1.94591114906
+! ||| remarked in excitement . ||| 0.0
+! ||| replacing waterworld ||| 0.0
+! ||| report ||| -10.1058167336
+! ||| represent ||| -7.8567060921
+! ||| residents . ||| -5.83188292728
+! ||| respect . ||| -6.05443842627
+! ||| responsibility . ||| -6.54678557076
+! ||| rich . ||| -4.02535409074
+! ||| right from the beginning ! ||| 0.0
+! ||| rise applications . ||| -0.69314718056
+! ||| river ! ||| 0.0
+! ||| road ! the crowd lined both sides ||| 0.0
+! ||| road ! the crowd lined both ||| 0.0
+! ||| road ! the crowd lined ||| 0.0
+! ||| road ! the crowd ||| 0.0
+! ||| road ! the ||| 0.0
+! ||| road ! ||| 0.0
+! ||| robbery ! ||| -1.38629436112
+! ||| rule . ||| -5.3375385597
+! ||| s nature . ||| 0.0
+! ||| said . ||| -7.59287079984
+! ||| satisfactory . ||| -5.9788840149
+! ||| satisfied ! ||| -0.69314718056
+! ||| say that . ||| -2.94443857917
+! ||| scrutinize their fare rise applications . ||| -0.69314718056
+! ||| seats to 24 seats in 2000 and ||| 0.0
+! ||| seats to 24 seats in 2000 ||| 0.0
+! ||| seats to 24 seats in ||| 0.0
+! ||| seats to 24 seats ||| 0.0
+! ||| seats to 24 ||| 0.0
+! ||| seats to ||| -4.63472876823
+! ||| sectors . ||| -5.51342826617
+! ||| secure to rely on . ||| 0.0
+! ||| security ! &quot; ||| 0.0
+! ||| security ! ||| 0.0
+! ||| see . ||| -5.45103740357
+! ||| see you soon ! ||| 0.0
+! ||| sense of direction . ||| -2.30258509299
+! ||| sentence ! ||| -1.38629436112
+! ||| service ! ||| -0.69314718056
+! ||| service division . ||| -0.69314718056
+! ||| sha tsui . ||| -3.40119838166
+! ||| shame ! ||| -1.79175746923
+! ||| share some of the main points made ||| 0.0
+! ||| share some of the main points ||| 0.0
+! ||| she ) ||| -2.30258509299
+! ||| she ? ||| -1.94591114906
+! ||| she is poor ! ||| 0.0
+! ||| shivered through ! ||| 0.0
+! ||| should be the case . ||| -1.38629436112
+! ||| shoulder ! ||| 0.0
+! ||| show my disapproval . ||| -1.09861328867
+! ||| side ! ||| 0.0
+! ||| sides of the road ! the crowd ||| 0.0
+! ||| sides of the road ! the ||| 0.0
+! ||| sides of the road ! ||| 0.0
+! ||| situation . ||| -7.4483341739
+! ||| size of your country ! ||| 0.0
+! ||| so ! ||| -1.20397280433
+! ||| so . ||| -7.5812096422
+! ||| so far . ||| -5.25749601203
+! ||| so that we can follow suit ? ||| 0.0
+! ||| so to speak . ||| -3.66356264613
+! ||| society ! ||| -1.09861328867
+! ||| some of the main points made by ||| 0.0
+! ||| some of the main points made ||| 0.0
+! ||| some of the main points ||| -2.07944154168
+! ||| somewhere else ! ||| -0.69314718056
+! ||| soon ! ||| 0.0
+! ||| soon as possible ! ||| 0.0
+! ||| south . ||| -3.66356264613
+! ||| speak . ||| -5.82894441761
+! ||| sports ! ||| 0.0
+! ||| standing orders . ||| -4.06044181055
+! ||| stay healthy ! ||| -1.60943791243
+! ||| stay on their jobs . ||| 0.0
+! ||| stayed on ! ||| 0.0
+! ||| step of the way . ||| -1.09861328867
+! ||| still leading the world . ||| -0.69314718056
+! ||| straight . ||| -2.77258872224
+! ||| strategy ? ||| -2.77258872224
+! ||| street . ||| -5.81711131996
+! ||| strength . ||| -5.04985544725
+! ||| strength in the years to come ! ||| 0.0
+! ||| success . ||| -6.30810043151
+! ||| such a great margin ! ||| 0.0
+! ||| such is really a tragic irony ! ||| 0.0
+! ||| such malpractice . ||| -1.79175746923
+! ||| such matters . ||| -2.94443857917
+! ||| suffering ! ||| 0.0
+! ||| suffering . ||| -3.58351813846
+! ||| suffering from this defect . ||| 0.0
+! ||| suit ? ||| -1.60943791243
+! ||| survival . ||| -4.06044181055
+! ||| t anticipate ||| 0.0
+! ||| table to show my disapproval . ||| -1.09861328867
+! ||| taiwan . ||| -5.24702367216
+! ||| take . ||| -4.91265504574
+! ||| taken at once . ||| 0.0
+! ||| taken to task ! ||| -0.69314718056
+! ||| task ! ||| -0.69314718056
+! ||| task . ||| -5.82894441761
+! ||| tears , so to speak . ||| 0.0
+! ||| terms ! ||| 0.0
+! ||| terms . ||| -6.04025571128
+! ||| than any free lunch ! ||| 0.0
+! ||| than none at all . ||| -0.69314718056
+! ||| that . ||| -6.3587094424
+! ||| that decision . ||| -3.04452343772
+! ||| that time ! ||| 0.0
+! ||| that time . ||| -5.71373281551
+! ||| that we can follow suit ? ||| 0.0
+! ||| the &quot; ||| -9.27874662984
+! ||| the beginning ! ||| 0.0
+! ||| the best . ||| -4.00733418523
+! ||| the bill . ||| -7.58273842891
+! ||| the board . ||| -5.3375385597
+! ||| the burden . ||| -3.21887582487
+! ||| the case . ||| -6.35088611671
+! ||| the case is ! ||| 0.0
+! ||| the central government ! ||| 0.0
+! ||| the contrary ! ||| 0.0
+! ||| the core . ||| 0.0
+! ||| the deepest consequences . ||| 0.0
+! ||| the east . ||| -2.07944154168
+! ||| the event ! ||| 0.0
+! ||| the first place ? ||| -1.94591114906
+! ||| the former ! ||| 0.0
+! ||| the government is . ||| -0.69314718056
+! ||| the government so far . ||| -0.69314718056
+! ||| the key factor ! ||| -1.38629436112
+! ||| the last detail ! ||| 0.0
+! ||| the long wait . ||| -0.69314718056
+! ||| the main points made by mr ||| 0.0
+! ||| the main points made by ||| 0.0
+! ||| the main points made ||| 0.0
+! ||| the main points ||| -4.09434256222
+! ||| the middle of the night ! ||| 0.0
+! ||| the momentum is building ! ||| 0.0
+! ||| the new year . ||| -3.33220411018
+! ||| the night ! ||| 0.0
+! ||| the north . ||| -2.63905692962
+! ||| the old beaten path ! ||| 0.0
+! ||| the other . ||| -6.5750759406
+! ||| the people ! ||| -1.60943791243
+! ||| the plough ! ||| -0.69314718056
+! ||| the policy . ||| -3.95124211858
+! ||| the property owners . ||| -0.69314718056
+! ||| the public . ||| -7.16626567913
+! ||| the rails ! ||| -1.60943791243
+! ||| the report ||| -8.63497497707
+! ||| the rich . ||| -2.63905692962
+! ||| the road ! the crowd lined both ||| 0.0
+! ||| the road ! the crowd lined ||| 0.0
+! ||| the road ! the crowd ||| 0.0
+! ||| the road ! the ||| 0.0
+! ||| the road ! ||| 0.0
+! ||| the robbery ! ||| -1.38629436112
+! ||| the situation . ||| -6.24416565066
+! ||| the street . ||| -4.12713638505
+! ||| the table to show my disapproval . ||| -1.09861328867
+! ||| the task . ||| -3.295837866
+! ||| the vulnerable groups . ||| -1.09861328867
+! ||| the way . ||| -4.14313572639
+! ||| the world ! ||| -1.38629436112
+! ||| the world . ||| -5.96614773912
+! ||| the years ahead . ||| -2.99573227355
+! ||| the years to come ! ||| 0.0
+! ||| their advantage ! ||| 0.0
+! ||| their detriment ! ||| 0.0
+! ||| their fare rise applications . ||| -0.69314718056
+! ||| their jobs . ||| -4.49981067033
+! ||| their lives . ||| -4.18965574203
+! ||| their potentials ! ||| 0.0
+! ||| their views . ||| -6.0185932245
+! ||| their writings ! ||| 0.0
+! ||| them ! ||| -1.09861328867
+! ||| them . ||| -7.6328865404
+! ||| them around . ||| -1.38629436112
+! ||| them intense suffering . ||| -0.69314718056
+! ||| them to stay on their jobs . ||| 0.0
+! ||| themselves ! ||| 0.0
+! ||| then ! ||| -0.405464608108
+! ||| then . ||| -5.94280010513
+! ||| there ? ||| -4.5538783916
+! ||| there are also ! ||| 0.0
+! ||| they can make . ||| 0.0
+! ||| thing ! ||| -1.60943791243
+! ||| things . ||| -5.81711131996
+! ||| thinking . ||| -5.17614929257
+! ||| this ! ||| -0.510825623766
+! ||| this . ||| -6.43347331488
+! ||| this bill . ||| -5.97380932187
+! ||| this chamber ! ||| -0.69314718056
+! ||| this defect . ||| 0.0
+! ||| this theatrical ||| -2.07944154168
+! ||| this time . why ? ||| 0.0
+! ||| this time . ||| -4.91998093583
+! ||| this ||| -12.5041579781
+! ||| those around me . ||| 0.0
+! ||| through ! ||| 0.0
+! ||| time ! ||| -2.3978951728
+! ||| time . why ? ||| -0.69314718056
+! ||| time . ||| -7.1260866773
+! ||| times . ||| -6.35784356651
+! ||| to . ||| -7.96589187308
+! ||| to 24 seats in 2000 and 30 ||| 0.0
+! ||| to 24 seats in 2000 and ||| 0.0
+! ||| to 24 seats in 2000 ||| 0.0
+! ||| to 24 seats in ||| 0.0
+! ||| to 24 seats ||| 0.0
+! ||| to 24 ||| -5.89989590358
+! ||| to accomplish the task . ||| 0.0
+! ||| to ask ||| -7.37211725234
+! ||| to be able to progress gradually . ||| 0.0
+! ||| to be ||| -10.8447269298
+! ||| to china . ||| -4.91265504574
+! ||| to come ! ||| 0.0
+! ||| to deceive people ! ||| 0.0
+! ||| to do so ! ||| 0.0
+! ||| to do so . ||| -6.74993135379
+! ||| to follow instructions ! ||| 0.0
+! ||| to have ! ||| 0.0
+! ||| to hear her say that . ||| 0.0
+! ||| to him ! ||| -1.09861328867
+! ||| to interpret ! ||| -1.09861328867
+! ||| to it ! ||| 0.0
+! ||| to our labour force ! ||| 0.0
+! ||| to pay the rich . ||| 0.0
+! ||| to progress gradually . ||| 0.0
+! ||| to provide entertainment for ourselves ! it ||| 0.0
+! ||| to provide entertainment for ourselves ! ||| 0.0
+! ||| to rely on . ||| -0.69314718056
+! ||| to report ||| -7.10002657063
+! ||| to shoulder ! ||| 0.0
+! ||| to show my disapproval . ||| -1.09861328867
+! ||| to speak . ||| -5.70711000475
+! ||| to stay on their jobs . ||| 0.0
+! ||| to take . ||| -4.29046164115
+! ||| to task ! ||| -0.69314718056
+! ||| to tears , so to speak . ||| 0.0
+! ||| to the contrary ! ||| 0.0
+! ||| to the core . ||| 0.0
+! ||| to the last detail ! ||| 0.0
+! ||| to the north . ||| -1.09861328867
+! ||| to their detriment ! ||| 0.0
+! ||| to them . ||| -6.070737218
+! ||| to them that ||| -3.43398610449
+! ||| to them ||| -7.9755639095
+! ||| to try to do so ! ||| 0.0
+! ||| to when ||| -4.73619842839
+! ||| to you ! ||| -1.09861328867
+! ||| to you in the first place ? ||| 0.0
+! ||| to ||| -10.4023648428
+! ||| too ! ||| -0.69314718056
+! ||| too numerous ! ||| 0.0
+! ||| tossed ! ||| 0.0
+! ||| tower in tsim sha tsui . ||| -1.09861328867
+! ||| town ! ||| 0.0
+! ||| township , ||| -1.79175746923
+! ||| tragic irony ! ||| 0.0
+! ||| try to do so ! ||| 0.0
+! ||| tsim sha tsui . ||| -3.295837866
+! ||| tsui . ||| -3.55534906149
+! ||| turning back ! ||| -1.38629436112
+! ||| understood everything . ||| 0.0
+! ||| up ! ||| -2.19722557734
+! ||| upcoming exhibition . ||| 0.0
+! ||| urban township , ||| 0.0
+! ||| us . see you soon ! ||| 0.0
+! ||| v ||| -7.91388592986
+! ||| value ! ||| 0.0
+! ||| very far . ||| -1.60943791243
+! ||| very well . ||| -4.68213114712
+! ||| victims . ||| -4.73619842839
