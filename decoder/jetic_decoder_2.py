@@ -4,6 +4,7 @@ import sys
 import models
 from copy import deepcopy
 from collections import namedtuple
+import multiprocessing
 
 from include.target_sentence import TargetSentence
 
@@ -31,6 +32,7 @@ class Decoder():
 
         for stackLength in range(len(sentence) + 1):
             sys.stderr.write('.' + str(len(stack[stackLength])))
+
 
             for targetSentenceKey in stack[stackLength]:
 

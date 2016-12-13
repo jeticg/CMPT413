@@ -1,11 +1,14 @@
 import math
 from collections import Counter
 
+
 # Collect BLEU-relevant statistics for a single sentence/reference pair.
 # Return value is a generator yielding:
 # (c, r, numerator1, denominator1, ... numerator4, denominator4)
 # Summing the columns across calls to this function on an entire corpus will
 # produce a vector of statistics that can be used to compute BLEU (below)
+
+
 def bleu_stats(sentence, reference):
   yield len(sentence)
   yield len(reference)
@@ -23,7 +26,7 @@ def bleu(stats):
   bleu_prec = sum([math.log(float(x)/y) for x,y in zip(stats[2::2],stats[3::2])])
   return math.exp(min([0, 1-float(r)/c]) + 0.25 * bleu_prec)
 
-# A modification of BLEU that returns a positive value even when some 
+# A modification of BLEU that returns a positive value even when some
 # higher-order precisions are zero. From Liang et al. 2006 (Footnote 5):
 # http://aclweb.org/anthology-new/P/P06/P06-1096.pdf
 def smoothed_bleu(stats):

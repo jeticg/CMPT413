@@ -133,28 +133,8 @@ class Decoder():
             add a TargetSentence instance to self.answers
 
         """
-        self.answers.append(targetSentence)
+        self.answers.append(targetSentence.targetSentenceEntity)
         return
-
-    def chooseBestAnswer(self):
-        """
-            return: the targetSentence with the highest score in self.answers
-
-            # must be used with decoder option saveToList=True
-
-            We can use a different model here to choose the best sentence. For
-            example, we could call the reranker here.
-
-        """
-        bestScore = -sys.maxint - 1
-        bestSentence = None
-        for sentence in self.answers:
-            score = sentence.totalScore(self.lm)
-            if bestScore < score:
-                bestScore = score
-                bestSentence = sentence
-
-        return bestSentence
 
 
 if __name__ == '__main__':
