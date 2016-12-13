@@ -18,7 +18,7 @@ def get_trans_pairs(source_file, target_file, k_line=5):
     return fr, en
 
 
-def generate_TM(phrase_file, k_line=100, fname='temporary_tm.txt'):
+def generate_TM(phrase_file, k_line=100, fname='nlp-data/temporary_tm.txt'):
     phrase_table = get_lines(phrase_file,
                              k_line=k_line,
                              preprocess=lambda x: x.strip().split('|||'))
