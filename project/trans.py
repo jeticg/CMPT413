@@ -35,21 +35,27 @@ if __name__ == "__main__":
     source_file = 'nlp-data/medium/train.cn'
     target_file = 'nlp-data/medium/train.en'
     phrase_file = 'nlp-data/medium/phrase-table/phrase-table'
-    lm_file = 'data/medium/'
+    lm_file = 'data/lm/en.tiny.3g.arpa'
+    tm_file = 'nlp-data/temporary_tm.txt'
+    max_line = 5
+    max_translation = 1
 
-    fr, en = get_trans_pairs(source_file, target_file, k_line=5)
+    fr, en = get_trans_pairs(source_file, target_file, k_line=max_line)
     sys.stderr.write("loaded source and target sentences\n")
 
-    # fname = generate_TM(phrase_file, k_line=-1)  # -1 : all
-    fname = 'temporary_tm.txt'
-    tm = models.TM(fname, 1)
-    lm = models.LM('lm')
+    # load translation model and language model
+    # tm_file = generate_TM(phrase_file, k_line=-1)  # -1 : all
+    tm = models.TM(tm_file, max_translation)
+    lm = models.LM(lm_file)
     for word in set(sum(fr, ())):
         if (word,) not in tm:
             tm[(word,)] = [models.phrase(word, 0.0)]
+
+    # initialise decoder
     decoder = Decoder(tm, lm)
     sys.stderr.write("loaded decoder model\n")
 
+    # start decoding
     count = 0
     for f in fr:
         count += 1
@@ -61,7 +67,9 @@ if __name__ == "__main__":
                        maxTranslation=20,
                        saveToList=True,
                        verbose=False)
-    sentence_list = decoder.answers
+        # sentence_list is a list of all the sentenced generated from decoder
+        # each entry is one sentence, which is a list of words
+        sentence_list = decoder.answers
 
     # TODO: how to get n-best choice in jetic's decoder?
     # MARK: you may easily get
