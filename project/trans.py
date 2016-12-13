@@ -35,11 +35,13 @@ if __name__ == "__main__":
     source_file = 'nlp-data/medium/train.cn'
     target_file = 'nlp-data/medium/train.en'
     phrase_file = 'nlp-data/medium/phrase-table/phrase-table'
+    lm_file = 'data/medium/'
 
     fr, en = get_trans_pairs(source_file, target_file, k_line=5)
     sys.stderr.write("loaded source and target sentences\n")
 
-    fname = generate_TM(phrase_file, k_line=100)  # -1 : all
+    # fname = generate_TM(phrase_file, k_line=-1)  # -1 : all
+    fname = 'temporary_tm.txt'
     tm = models.TM(fname, 1)
     lm = models.LM('lm')
     for word in set(sum(fr, ())):

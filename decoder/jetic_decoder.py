@@ -25,6 +25,7 @@ class Decoder():
                saveToList=False,
                verbose=False):
 
+        self.answers = []
         bestScore = - sys.maxint - 1
         bestSentence = ()
         emptyTargetSentence = TargetSentence(length=len(sentence))
