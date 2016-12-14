@@ -2,11 +2,44 @@ import math
 import sys
 import os
 from collections import namedtuple
-
+from copy import deepcopy
 
 import decoder.models as models
 from decoder.jetic_decoder import Decoder
 from utility import get_lines
+
+
+class Translator():
+    def __init__(self,
+                 tm, lm, itm, lex, ilex,
+                 weights=(1.0, 1.0, 1.0, 1.0, 1.0, 1.0)):
+        self.decoder = Decoder(tm, lm, itm, lex, ilex)
+        self.lm = lm
+        self.weights = weights
+        return
+
+    def translate(self, f):
+        self.decoder.decode(f,
+                            maxPhraseLen=20,
+                            maxStackSize=500,
+                            maxTranslation=20,
+                            saveToList=True,
+                            verbose=False)
+
+        sentence_list = deepcopy(self.decoder.answers)
+        maxScore = -sys.maxint
+        output = f
+        for targetSentence in range(len(sentence_list)):
+            features = targetSentence.getFeatures(self.lm)
+            score = 0.0
+            for i in range(len(features)):
+                score += features[i] * self.weights[i]
+            print score
+            if score > maxScore:
+                maxScore = score
+                output = ' '.join(targetSentence.getWords())
+        # rerank
+        return output
 
 
 def get_trans_pairs(source_file, target_file, k_line=5):
@@ -71,27 +104,14 @@ if __name__ == "__main__":
             ilex[((word,), word)] = 0.0
 
     # initialise decoder
-    decoder = Decoder(tm, lm, itm, lex, ilex)
-    sys.stderr.write("loaded decoder model\n")
+    translator = Translator(tm, lm, itm, lex, ilex)
+    sys.stderr.write("translator loaded\n")
 
     # start decoding
     count = 0
     for f in fr:
         count += 1
-        sys.stderr.write("Decoding sentence " + str(count) + " of " +
+        sys.stderr.write("translating sentence " + str(count) + " of " +
                          str(len(fr)) + "\n")
-        decoder.decode(f,
-                       maxPhraseLen=20,
-                       maxStackSize=500,
-                       maxTranslation=20,
-                       saveToList=True,
-                       verbose=False)
-        # sentence_list is a list of all the sentenced generated from decoder
-        # each entry is a targetSentence instance
-        sentence_list = decoder.answers
-        for i in range(len(sentence_list)):
-            targetSentence = sentence_list[i]
-            sentence_list[i] = targetSentence.getWords(), targetSentence.getFeatures(lm)
-
-    # TODO: how to get n-best choice in jetic's decoder?
-    # MARK: you may easily get
+        output = translator.translate(f)
+        print output
