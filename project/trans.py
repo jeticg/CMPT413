@@ -1,6 +1,7 @@
 import math
 import sys
 import os
+import optparse
 from collections import namedtuple
 from copy import deepcopy
 
@@ -113,20 +114,23 @@ def generate_TM(phrase_file, k_line=100, k_trans=1):
     return tm, itm, lex, ilex
 
 if __name__ == "__main__":
-    source_file = 'nlp-data/toy/train.cn'
-    target_file = 'nlp-data/toy/train.en'
-    phrase_file = 'nlp-data/toy/phrase-table/phrase-table'
-    lm_file = 'nlp-data/lm/en.tiny.3g.arpa'
-    generate_n_best = True
-    max_line = 5
-    max_translation = 1
+    optparser = optparse.OptionParser()
+    optparser.add_option("-s", "--source-file", dest="source", default='nlp-data/toy/train.cn', help="Source file")
+    optparser.add_option("-t", "--target-file", dest="target", default='nlp-data/toy/train.en', help="Target file")
+    optparser.add_option("-p", "--phrase-file", dest="phrase", default='nlp-data/toy/phrase-table/phrase-table', help="Phrase table file")
+    optparser.add_option("-l", "--lm-file", dest="lm", default='nlp-data/lm/en.tiny.3g.arpa', help="Language model file")
+    optparser.add_option("-m", "--max-line", dest="maxline", default=5, help="Translate the first m lines")
+    optparser.add_option("-a", "--max-translation", dest="maxtrans", default=1, help="a translations for one source phrase")
+    optparser.add_option("-g", "--generate-n-best", dest="generate", action="store_false", default=True, help="generate n best")
+    optparser.add_option("-w", "--weight-file", dest="weights", default=None, help="Weight filename, or - for stdin (default=use uniform weights)")
+    (opts, _) = optparser.parse_args()
 
-    fr, en = get_trans_pairs(source_file, target_file, k_line=max_line)
+    fr, en = get_trans_pairs(opts.source, opts.target, k_line=opts.maxline)
     sys.stderr.write("loaded source and target sentences\n")
 
     # load translation model and language model
-    tm, itm, lex, ilex = generate_TM(phrase_file, k_line=-1, k_trans=max_translation)
-    lm = models.LM(lm_file)
+    tm, itm, lex, ilex = generate_TM(opts.phrase, k_line=-1, k_trans=opts.maxtrans)
+    lm = models.LM(opts.lm)
     for word in set(sum(fr, ())):
         if (word,) not in tm:
             tm[(word,)] = [models.phrase(word, 0.0)]
@@ -134,12 +138,21 @@ if __name__ == "__main__":
             lex[(word, (word,))] = 0.0
             ilex[((word,), word)] = 0.0
 
+    # load weight-file
+    if opts.weights is not None:
+        weights_file = sys.stdin if opts.weights is "-" else open(opts.weights)
+        w = [float(line.strip()) for line in weights_file]
+        w = map(lambda x: 1.0 if math.isnan(x) or x == float("-inf") or x == float("inf") or x == 0.0 else x, w)
+        w = None if len(w) == 0 else w
+    else:
+        w = [1.0/6.0 for _ in xrange(6)]
+
     # initialise decoder
-    translator = Translator(tm, lm, itm, lex, ilex)
+    translator = Translator(tm, lm, itm, lex, ilex, w)
     sys.stderr.write("translator loaded\n")
 
     # start decoding
-    if generate_n_best:
+    if opts.generate:
         translator.generateNBest(fr, n=100)
     else:
         count = 0
