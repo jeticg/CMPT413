@@ -49,7 +49,6 @@ class Translator():
             self.decoder.decode(f,
                                 maxPhraseLen=20,
                                 maxStackSize=500,
-                                maxTranslation=20,
                                 saveToList=True,
                                 verbose=False)
 
