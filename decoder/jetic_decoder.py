@@ -11,9 +11,12 @@ phrase = namedtuple("phrase", "english, logprob")
 
 
 class Decoder():
-    def __init__(self, tm, lm):
+    def __init__(self, tm, lm, itm=None, lex=None, ilex=None):
         self.tm = tm
         self.lm = lm
+        self.itm = itm
+        self.lex = lex
+        self.ilex = ilex
         self.answers = []
         return
 
@@ -70,19 +73,22 @@ class Decoder():
 
                                 # Generate min of newStack when size of the stack hits maximum
                                 # if its already generated, and if the current score is already lower than min, skip
+                                '''
                                 if minNewStack[length] == -sys.maxint:
                                     if (len(newStack[length]) == maxStackSize):
                                         minNewStack[length] = min(newStack[length].items(), key=lambda x: x[1][0])
                                         minNewStack[length] = minNewStack[length][1][0]
-                                elif minNewStack[length] >= targetSentenceScore:
+                                elif minNewStack[length] >= targetSentenceScore[0]:
                                     continue
-
+                                '''
                                 # Reconstruct sentence
                                 targetSentence = TargetSentence(key=targetSentenceKey,
                                                                 tmScore=targetSentenceScore)
 
                                 # Add phrase to sentence
-                                targetSentence.addPhrase(j, k, targetPhrase)
+                                targetSentence.addPhrase(j, k,
+                                                         sourcePhrase, targetPhrase,
+                                                         self.itm, self.lex, self.ilex)
 
                                 # Compare with best score if translation complete, and skip adding to newStack
                                 if targetSentence.translationCompleted():
@@ -96,7 +102,7 @@ class Decoder():
                                     # Add the combined targetSentence to newStack if translation incomplete
                                     key = targetSentence.key()
                                     if key in newStack[length]:
-                                        if targetSentence.tmScore <= newStack[length][key][1]:
+                                        if targetSentence.tmScore[0] <= newStack[length][key][1][0]:
                                             continue
                                     newStack[length][key] = targetSentence.totalScore(self.lm), targetSentence.tmScore
                                 # Current stackLength processed, processed with next subStack
@@ -134,7 +140,7 @@ class Decoder():
             add a TargetSentence instance to self.answers
 
         """
-        self.answers.append(targetSentence.targetSentenceEntity)
+        self.answers.append(targetSentence)
         return
 
 
