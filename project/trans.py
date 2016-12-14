@@ -153,8 +153,10 @@ if __name__ == "__main__":
 
     # start decoding
     if opts.generate != -1:
+        sys.stderr.write("generating n best\n")
         translator.generateNBest(fr, n=opts.generate)
     else:
+        sys.stderr.write("translating\n")
         count = 0
         for f in fr:
             count += 1
