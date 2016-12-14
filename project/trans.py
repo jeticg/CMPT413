@@ -19,6 +19,8 @@ def get_trans_pairs(source_file, target_file, k_line=5):
 
 
 def generate_TM(phrase_file, k_line=100, k_trans=1):
+    phrase = namedtuple("phrase", "english, logprob")
+
     phrase_table = get_lines(phrase_file,
                              k_line=k_line,
                              preprocess=lambda x: x.strip().split('|||'))
@@ -30,23 +32,28 @@ def generate_TM(phrase_file, k_line=100, k_trans=1):
 
     for each in phrase_table:
         f = tuple(each[0].split())
-        e = each[1]
-        logprob = each[2].strip().split()[0]
-        tm.setdefault(tuple(f.split()), []).append(phrase(e, float(logprob)))
-        itm[(e, f)] = math.log(float(each[2].strip().split()[1]))
-        lex[(f, e)] = math.log(float(each[2].strip().split()[2]))
-        ilex[(e, f)] = math.log(float(each[2].strip().split()[3]))
+        e = each[1].strip()
+        numbers = each[2].strip().split()
+        for index in range(len(numbers)):
+            numbers[index] = float(numbers[index])
+            if numbers[index] > 0:
+                numbers[index] = math.log(numbers[index])
+
+        tm.setdefault(f, []).append(phrase(e, numbers[0]))
+        # tm[(e, f)] = numbers[0]
+        itm[(f, e)] = numbers[1]
+        lex[(e, f)] = numbers[2]
+        ilex[(f, e)] = numbers[3]
     for f in tm:  # prune all but top k translations
         tm[f].sort(key=lambda x: -x.logprob)
-        del tm[f][k:]
+        del tm[f][k_trans:]
     return tm, itm, lex, ilex
 
 if __name__ == "__main__":
     source_file = 'nlp-data/medium/train.cn'
     target_file = 'nlp-data/medium/train.en'
     phrase_file = 'nlp-data/medium/phrase-table/phrase-table'
-    lm_file = 'data/lm/en.tiny.3g.arpa'
-    tm_file = 'nlp-data/temporary_tm.txt'
+    lm_file = 'nlp-data/lm/en.tiny.3g.arpa'
     max_line = 5
     max_translation = 1
 
@@ -59,6 +66,9 @@ if __name__ == "__main__":
     for word in set(sum(fr, ())):
         if (word,) not in tm:
             tm[(word,)] = [models.phrase(word, 0.0)]
+            itm[((word,), word)] = 0.0
+            lex[(word, (word,))] = 0.0
+            ilex[((word,), word)] = 0.0
 
     # initialise decoder
     decoder = Decoder(tm, lm, itm, lex, ilex)
@@ -79,9 +89,9 @@ if __name__ == "__main__":
         # sentence_list is a list of all the sentenced generated from decoder
         # each entry is a targetSentence instance
         sentence_list = decoder.answers
-        for index in range(len(sentence_list)):
+        for i in range(len(sentence_list)):
             targetSentence = sentence_list[i]
-            sentence_list[i] = targetSentence.getWords, targetSentence.getFeatures
+            sentence_list[i] = targetSentence.getWords(), targetSentence.getFeatures(lm)
 
     # TODO: how to get n-best choice in jetic's decoder?
     # MARK: you may easily get

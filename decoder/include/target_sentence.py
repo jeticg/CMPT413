@@ -34,7 +34,7 @@ class TargetSentence():
         return
 
     def getWords(self):
-        return self.targetSentenceEntity
+        return list(self.targetSentenceEntity)
 
     def getFeatures(self, lm):
         return [self.lmScore(lm), self.tmScore[5], self.tmScore[1], self.tmScore[2], self.tmScore[3], self.tmScore[4]]
@@ -63,13 +63,13 @@ class TargetSentence():
         # self.tmScore += targetPhrase.logprob + self.distance(self.lastPos, phraseStartPosition)
         # '''
         self.tmScore[0] += targetPhrase.logprob + self.distance(self.lastPos, phraseStartPosition)
-        self.tmScore[1] += targetPhrase.logprob
         if itm is not None:
-            self.tmScore[2] += itm[(sourcePhrase, targetPhrase.e)]
-        if lex is not None:
-            self.tmScore[3] += lex[(targetPhrase.e, sourcePhrase)]
+            self.tmScore[1] += itm[(sourcePhrase, targetPhrase.english)]
         if ilex is not None:
-            self.tmScore[4] += ilex[(sourcePhrase, targetPhrase.e)]
+            self.tmScore[2] += ilex[(sourcePhrase, targetPhrase.english)]
+        self.tmScore[3] += targetPhrase.logprob
+        if lex is not None:
+            self.tmScore[4] += lex[(targetPhrase.english, sourcePhrase)]
         self.tmScore[5] += self.distance(self.lastPos, phraseStartPosition)
         # '''
         # update lastPos
