@@ -22,7 +22,7 @@ class Translator():
     def translate(self, f):
         self.decoder.decode(f,
                             maxPhraseLen=20,
-                            maxStackSize=500,
+                            maxStackSize=20,
                             maxTranslation=20,
                             saveToList=True,
                             verbose=False)
@@ -46,9 +46,10 @@ class Translator():
         count = 0
         fileN = open(fileName, 'w')
         for f in fr:
+            sys.stderr.write("processing " + str(count) + " of " + str(len(fr)) + " sentences" + "\n")
             self.decoder.decode(f,
                                 maxPhraseLen=20,
-                                maxStackSize=500,
+                                maxStackSize=20,
                                 saveToList=True,
                                 verbose=False)
 
