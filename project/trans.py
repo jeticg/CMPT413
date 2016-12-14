@@ -115,13 +115,13 @@ def generate_TM(phrase_file, k_line=100, k_trans=1):
 
 if __name__ == "__main__":
     optparser = optparse.OptionParser()
-    optparser.add_option("-s", "--source-file", dest="source", default='nlp-data/toy/train.cn', help="Source file")
-    optparser.add_option("-t", "--target-file", dest="target", default='nlp-data/toy/train.en', help="Target file")
-    optparser.add_option("-p", "--phrase-file", dest="phrase", default='nlp-data/toy/phrase-table/phrase-table', help="Phrase table file")
+    optparser.add_option("-s", "--source-file", dest="source", default='nlp-data/medium/train.cn', help="Source file")
+    optparser.add_option("-t", "--target-file", dest="target", default='nlp-data/medium/train.en', help="Target file")
+    optparser.add_option("-p", "--phrase-file", dest="phrase", default='nlp-data/medium/phrase-table/phrase-table', help="Phrase table file")
     optparser.add_option("-l", "--lm-file", dest="lm", default='nlp-data/lm/en.tiny.3g.arpa', help="Language model file")
-    optparser.add_option("-m", "--max-line", dest="maxline", default=5, help="Translate the first m lines")
+    optparser.add_option("-m", "--max-line", dest="maxline", default=100, help="Translate the first m lines")
     optparser.add_option("-a", "--max-translation", dest="maxtrans", default=1, help="a translations for one source phrase")
-    optparser.add_option("-g", "--generate-n-best", dest="generate", action="store_false", default=True, help="generate n best")
+    optparser.add_option("-g", "--generate-n-best", dest="generate", default=-1, help="generate n best")
     optparser.add_option("-w", "--weight-file", dest="weights", default=None, help="Weight filename, or - for stdin (default=use uniform weights)")
     (opts, _) = optparser.parse_args()
 
@@ -152,8 +152,8 @@ if __name__ == "__main__":
     sys.stderr.write("translator loaded\n")
 
     # start decoding
-    if opts.generate:
-        translator.generateNBest(fr, n=100)
+    if opts.generate != -1:
+        translator.generateNBest(fr, n=opts.generate)
     else:
         count = 0
         for f in fr:
