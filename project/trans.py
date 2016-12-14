@@ -29,7 +29,7 @@ class Translator():
         sentence_list = deepcopy(self.decoder.answers)
         maxScore = -sys.maxint
         output = f
-        for targetSentence in range(len(sentence_list)):
+        for targetSentence in sentence_list:
             features = targetSentence.getFeatures(self.lm)
             score = 0.0
             for i in range(len(features)):
@@ -38,7 +38,37 @@ class Translator():
             if score > maxScore:
                 maxScore = score
                 output = ' '.join(targetSentence.getWords())
-        # rerank
+
+        return output
+
+    def generateNBest(self, fr, n, fileName="duang.nbest"):
+        count = 0
+        fileN = open(fileName, 'w')
+        for f in fr:
+            self.decoder.decode(f,
+                                maxPhraseLen=20,
+                                maxStackSize=500,
+                                maxTranslation=20,
+                                saveToList=True,
+                                verbose=False)
+
+            sentence_list = deepcopy(self.decoder.answers)
+            maxScore = -sys.maxint
+            output = f
+            printed = 0
+            for targetSentence in sentence_list:
+                sentence = ' '.join(targetSentence.getWords())
+                features = targetSentence.getFeatures(self.lm)
+                fileN.write(str(count) + " ||| " + sentence + " ||| " +
+                            str(features[0]) + " " + str(features[1]) + " " +
+                            str(features[2]) + " " + str(features[3]) + " " +
+                            str(features[4]) + " " + str(features[5]) + "\n")
+                printed += 1
+                if printed == n:
+                    break
+            count += 1
+
+        fileN.close()
         return output
 
 
@@ -83,10 +113,11 @@ def generate_TM(phrase_file, k_line=100, k_trans=1):
     return tm, itm, lex, ilex
 
 if __name__ == "__main__":
-    source_file = 'nlp-data/medium/train.cn'
-    target_file = 'nlp-data/medium/train.en'
-    phrase_file = 'nlp-data/medium/phrase-table/phrase-table'
+    source_file = 'nlp-data/toy/train.cn'
+    target_file = 'nlp-data/toy/train.en'
+    phrase_file = 'nlp-data/toy/phrase-table/phrase-table'
     lm_file = 'nlp-data/lm/en.tiny.3g.arpa'
+    generate_n_best = True
     max_line = 5
     max_translation = 1
 
@@ -108,10 +139,13 @@ if __name__ == "__main__":
     sys.stderr.write("translator loaded\n")
 
     # start decoding
-    count = 0
-    for f in fr:
-        count += 1
-        sys.stderr.write("translating sentence " + str(count) + " of " +
-                         str(len(fr)) + "\n")
-        output = translator.translate(f)
-        print output
+    if generate_n_best:
+        translator.generateNBest(fr, n=100)
+    else:
+        count = 0
+        for f in fr:
+            count += 1
+            sys.stderr.write("translating sentence " + str(count) + " of " +
+                             str(len(fr)) + "\n")
+            output = translator.translate(f)
+            print output

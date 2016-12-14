@@ -132,6 +132,8 @@ class Decoder():
             minNewStack = [-sys.maxint - 1 for x in range(len(sentence) + 1)]
 
         # All words processed, we now have the best sentence stored in bestSentence
+        self.answers = sorted(self.answers, key=lambda x: x.totalScore(self.lm), reverse=True)
+
         print " ".join(bestSentence)
         return
 
