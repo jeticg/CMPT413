@@ -118,9 +118,9 @@ if __name__ == "__main__":
     optparser.add_option("-t", "--target-file", dest="target", default='nlp-data/medium/train.en', help="Target file")
     optparser.add_option("-p", "--phrase-file", dest="phrase", default='nlp-data/medium/phrase-table/phrase-table', help="Phrase table file")
     optparser.add_option("-l", "--lm-file", dest="lm", default='nlp-data/lm/en.tiny.3g.arpa', help="Language model file")
-    optparser.add_option("-m", "--max-line", dest="maxline", default=100, help="Translate the first m lines")
-    optparser.add_option("-a", "--max-translation", dest="maxtrans", default=1, help="a translations for one source phrase")
-    optparser.add_option("-g", "--generate-n-best", dest="generate", default=-1, help="generate n best")
+    optparser.add_option("-m", "--max-line", dest="maxline", type="int", default=100, help="Translate the first m lines")
+    optparser.add_option("-a", "--max-translation", dest="maxtrans", type="int", default=1, help="a translations for one source phrase")
+    optparser.add_option("-g", "--generate-n-best", dest="generate", type="int", default=-1, help="generate n best")
     optparser.add_option("-w", "--weight-file", dest="weights", default=None, help="Weight filename, or - for stdin (default=use uniform weights)")
     (opts, _) = optparser.parse_args()
 
