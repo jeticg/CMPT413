@@ -35,12 +35,17 @@ pip install h5py numpy
 # Usage (Play with)
 ### Download pretrained model
 
+[Google Drive](https://drive.google.com/drive/folders/0B68S9BF6dHe6ZEdadUFocFB6SlU?usp=sharing)
+
 ### run
-```th evaluate.lua -model demo-model_final.t7 -src_file data/src-val.txt -output_file pred.txt 
--src_dict data/demo.src.dict -targ_dict data/demo.targ.dict``
+```
+th evaluate.lua -model demo-model_final.t7 -src_file data/src-val.txt -output_file pred.txt 
+-src_dict data/demo.src.dict -targ_dict data/demo.targ.dict
+```
 
 # Usage (train your own model)
 ### Split data into train and validation 
+Make sure validation sentences haven't mixed in Training.
 
 ### Transform data into hdf5
 ```
